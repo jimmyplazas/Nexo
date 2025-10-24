@@ -49,7 +49,7 @@ buildkonfig = "0.17.1"
 
 projectApplicationId = "dev.alejo.nexo"
 projectVersionName = "1.0.0"
-projectMinSdkVersion = "26"
+projectMinSdkVersion = "30"
 projectTargetSdkVersion = "36"
 projectCompileSdkVersion = "36"
 projectVersionCode = "1"
