@@ -16,6 +16,7 @@ compose-multiplatform = "1.9.0-beta01"
 compose-lifecycle = "2.9.1"
 navigation-compose = "2.9.0-beta04"
 jetbrains-core-bundle = "1.0.1"
+material-icons = "1.7.3"
 
 # AndroidX
 androidx-activity = "1.10.1"
@@ -141,12 +142,20 @@ compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compile
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 androidx-room-gradle-plugin = { module = "androidx.room:room-gradle-plugin", version.ref = "room" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+buildkonfig-gradlePlugin = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-gradle-plugin", version.ref = "buildkonfig" }
+buildkonfig-compiler = { group = "com.codingfeline.buildkonfig", name = "buildkonfig-compiler", version.ref = "buildkonfig" }
 
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
 jetbrains-compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-jetbrains" }
+jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref="compose-jetbrains"}
+jetbrains-compose-material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "material-icons"}
+jetbrains-compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "material-icons"}
+jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref="compose-jetbrains"}
+jetbrains-compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref="compose-jetbrains"}
+
 jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "compose-lifecycle" }
 jetbrains-lifecycle-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
 jetbrains-lifecycle-viewmodel-savedstate = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "compose-lifecycle" }
@@ -157,6 +166,13 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 
 [plugins]
 convention-android-application = { id = "dev.alejo.convention.android.application", version = "unspecified" }
+convention-android-application-compose = { id = "dev.alejo.convention.android.application.compose", version = "unspecified" }
+convention-cmp-application = { id = "dev.alejo.convention.cmp.application", version = "unspecified" }
+convention-kmp-library = { id = "dev.alejo.convention.kmp.library", version = "unspecified" }
+convention-cmp-library = { id = "dev.alejo.convention.cmp.library", version = "unspecified" }
+convention-cmp-feature = { id = "dev.alejo.convention.cmp.feature", version = "unspecified" }
+convention-buildkonfig = { id = "dev.alejo.convention.buildkonfig", version = "unspecified" }
+convention-room = { id = "dev.alejo.convention.room", version = "unspecified" }
 
 # Android
 android-application = { id = "com.android.application", version.ref = "agp" }

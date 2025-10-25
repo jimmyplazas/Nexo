@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
-2
+
 include(":composeApp")
 include(":core:presentation")
 include(":core:domain")
