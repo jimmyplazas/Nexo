@@ -1,9 +1,8 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.convention.android.application)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose.hot.reload)
@@ -25,8 +24,6 @@ kotlin {
             isStatic = true
         }
     }
-    
-    jvm()
     
     sourceSets {
         androidMain.dependencies {
@@ -63,45 +60,6 @@ kotlin {
     }
 }
 
-android {
-    namespace = libs.versions.projectApplicationId.get().toString()
-    compileSdk = libs.versions.projectCompileSdkVersion.get().toInt()
-
-    defaultConfig {
-        applicationId = libs.versions.projectApplicationId.get().toString()
-        minSdk = libs.versions.projectMinSdkVersion.get().toInt()
-        targetSdk = libs.versions.projectTargetSdkVersion.get().toInt()
-        versionCode = libs.versions.projectVersionCode.get().toInt()
-        versionName = libs.versions.projectVersionName.get().toString()
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
 dependencies {
     debugImplementation(compose.uiTooling)
-}
-
-compose.desktop {
-    application {
-        mainClass = "dev.alejo.nexo.MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "dev.alejo.nexo"
-            packageVersion = "1.0.0"
-        }
-    }
 }
