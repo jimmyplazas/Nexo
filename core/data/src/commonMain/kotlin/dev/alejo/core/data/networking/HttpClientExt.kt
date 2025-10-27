@@ -2,8 +2,17 @@ package dev.alejo.core.data.networking
 
 import dev.alejo.core.domain.Result
 import dev.alejo.core.domain.util.DataError
+import io.ktor.client.HttpClient
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 
 /**
@@ -36,6 +45,133 @@ suspend inline fun <reified T> safeCall(
 }
 
 /**
+ * Performs a safe HTTP POST request.
+ *
+ * This extension function simplifies making a POST request using Ktor's [HttpClient].
+ * It wraps the call in [safeCall] to automatically handle network errors and HTTP status codes,
+ * returning a [Result] object.
+ *
+ * @param Request The type of the request body.
+ * @param Response The expected type of the successful response body. Must be a non-nullable type.
+ * @param route The API endpoint/route to which the request will be sent (e.g., "/users").
+ * @param queryParams A map of query parameters to be appended to the URL.
+ * @param body The request body object, which will be serialized and sent.
+ * @param builder An optional lambda to further configure the [HttpRequestBuilder] (e.g., adding headers).
+ * @return A [Result] which is either [Result.Success] containing the deserialized [Response] data
+ *         or [Result.Failure] containing a [DataError.Remote].
+ */
+suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
+    route: String,
+    queryParams: Map<String, Any> = mapOf(),
+    body: Request,
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+): Result<Response, DataError.Remote> {
+    return safeCall {
+        post {
+            url(constructRoute(route))
+            queryParams.forEach { (key, value) ->
+                parameter(key, value)
+            }
+            setBody(body)
+            builder()
+        }
+    }
+}
+
+/**
+ * Performs a GET request to a specified route.
+ *
+ * This function is a wrapper around Ktor's `get` call, integrating it with the `safeCall`
+ * mechanism to provide robust error handling and response parsing. It constructs the full URL,
+ * adds any specified query parameters, and allows for further customization of the request
+ * via the `builder` lambda. The response is automatically handled and wrapped in a [Result] type.
+ *
+ * @param Response The expected type of the successful response body, which must be `Any`.
+ * @param route The API endpoint or route for the request (e.g., "/users/1"). The base URL will be prepended automatically.
+ * @param queryParams A map of query parameters to be appended to the URL. Defaults to an empty map.
+ * @param builder A lambda for advanced configuration of the [HttpRequestBuilder] (e.g., setting headers).
+ * @return A [Result] which is either [Result.Success] containing the deserialized [Response] data
+ *         or [Result.Failure] containing a [DataError.Remote] if the request fails or returns an error status code.
+ */
+suspend inline fun <reified Response : Any> HttpClient.get(
+    route: String,
+    queryParams: Map<String, Any> = mapOf(),
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+): Result<Response, DataError.Remote> {
+    return safeCall {
+        get {
+            url(constructRoute(route))
+            queryParams.forEach { (key, value) ->
+                parameter(key, value)
+            }
+            builder()
+        }
+    }
+}
+
+/**
+ * Sends a DELETE request to the specified [route] and wraps the result in a [Result] object.
+ * This function handles network errors and HTTP status codes, mapping them to a [DataError.Remote].
+ *
+ * @param Response The expected type of the response body.
+ * @param route The API endpoint path (e.g., "/users/123"). The base URL will be prepended automatically.
+ * @param queryParams A map of query parameters to be appended to the URL.
+ * @param builder A lambda for further configuring the [HttpRequestBuilder], such as adding headers.
+ * @return A [Result] which is either [Result.Success] containing the deserialized [Response] data,
+ *         or [Result.Failure] containing a [DataError.Remote].
+ */
+suspend inline fun <reified Response : Any> HttpClient.delete(
+    route: String,
+    queryParams: Map<String, Any> = mapOf(),
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+): Result<Response, DataError.Remote> {
+    return safeCall {
+        delete {
+            url(constructRoute(route))
+            queryParams.forEach { (key, value) ->
+                parameter(key, value)
+            }
+            builder()
+        }
+    }
+}
+
+/**
+ * Performs a safe HTTP PUT request.
+ *
+ * This extension function simplifies making a PUT request by handling URL construction,
+ * query parameters, body serialization, and wrapping the call in a `safeCall` to
+ * manage exceptions and response status codes gracefully.
+ *
+ * @param Request The type of the request body object, which will be serialized.
+ * @param Response The type of the expected successful response body. Must be a non-nullable type.
+ * @param route The API endpoint or route for the request (e.g., "/users/1").
+ * @param queryParams A map of key-value pairs to be added as URL query parameters.
+ * @param body The request body object to be sent with the request.
+ * @param builder An optional lambda to further customize the Ktor `HttpRequestBuilder`,
+ *                allowing for setting headers, etc.
+ * @return A [Result] which is either [Result.Success] containing the deserialized [Response] data,
+ *         or [Result.Failure] containing a [DataError.Remote].
+ */
+suspend inline fun <reified Request, reified Response : Any> HttpClient.put(
+    route: String,
+    queryParams: Map<String, Any> = mapOf(),
+    body: Request,
+    crossinline builder: HttpRequestBuilder.() -> Unit = {}
+): Result<Response, DataError.Remote> {
+    return safeCall {
+        put {
+            url(constructRoute(route))
+            queryParams.forEach { (key, value) ->
+                parameter(key, value)
+            }
+            setBody(body)
+            builder()
+        }
+    }
+}
+
+/**
  * Converts an [HttpResponse] into a [Result] object.
  *
  * This function processes the HTTP status code of the response. If the status is in the 2xx range,
@@ -59,6 +195,7 @@ suspend inline fun <reified T> responseToResult(
                 Result.Failure(DataError.Remote.SERIALIZATION)
             }
         }
+
         400 -> Result.Failure(DataError.Remote.BAD_REQUEST)
         401 -> Result.Failure(DataError.Remote.UNAUTHORIZED)
         403 -> Result.Failure(DataError.Remote.FORBIDDEN)
