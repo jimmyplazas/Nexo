@@ -14,22 +14,20 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(projects.core.domain)
+
+                implementation(libs.bundles.ktor.common)
             }
         }
 
         androidMain {
             dependencies {
-
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
         iosMain {
             dependencies {
-                // Add iOS-specific dependencies here. This a source set created by Kotlin Gradle
-                // Plugin (KGP) that each specific iOS target (e.g., iosX64) depends on as
-                // part of KMP’s default source set hierarchy. Note that this source set depends
-                // on common by default and will correctly pull the iOS artifacts of any
-                // KMP dependencies declared in commonMain.
+                implementation(libs.ktor.client.darwin)
             }
         }
     }
