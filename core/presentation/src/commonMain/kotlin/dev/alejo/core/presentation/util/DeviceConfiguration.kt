@@ -18,7 +18,7 @@ import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOW
  * @return The current [DeviceConfiguration] of the device window.
  */
 @Composable
-fun currentConfiguration(): DeviceConfiguration {
+fun currentDeviceConfiguration(): DeviceConfiguration {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     return DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
 }
