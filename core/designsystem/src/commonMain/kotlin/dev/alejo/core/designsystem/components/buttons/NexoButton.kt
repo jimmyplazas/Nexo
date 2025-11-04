@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -35,7 +36,7 @@ fun NexoButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: NexoButtonStyle = NexoButtonStyle.PRIMARY,
-    isEnabled: Boolean = true,
+    enabled: Boolean = true,
     isLoading: Boolean = false,
     leadingIcon: @Composable (() -> Unit)? = {}
 ) {
@@ -78,11 +79,11 @@ fun NexoButton(
     )
 
     val border = when {
-        style == NexoButtonStyle.PRIMARY && !isEnabled -> defaultBorderStroke
-        style == NexoButtonStyle.SECONDARY && !isEnabled -> defaultBorderStroke
-        style == NexoButtonStyle.DESTRUCTIVE_PRIMARY && !isEnabled -> defaultBorderStroke
+        style == NexoButtonStyle.PRIMARY && !enabled -> defaultBorderStroke
+        style == NexoButtonStyle.SECONDARY -> defaultBorderStroke
+        style == NexoButtonStyle.DESTRUCTIVE_PRIMARY && !enabled -> defaultBorderStroke
         style == NexoButtonStyle.DESTRUCTIVE_SECONDARY -> {
-            val borderColor = if(isEnabled) {
+            val borderColor = if(enabled) {
                 MaterialTheme.colorScheme.extended.destructiveSecondaryOutline
             } else {
                 MaterialTheme.colorScheme.extended.disabledOutline
@@ -98,13 +99,15 @@ fun NexoButton(
     Button(
         onClick = onClick,
         modifier = modifier,
-        enabled = isEnabled,
+        enabled = enabled,
         shape = RoundedCornerShape(8.dp),
         colors = colors,
         border = border
     ) {
         Box(
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(6.dp)
         ) {
             CircularProgressIndicator(
                 modifier = Modifier
