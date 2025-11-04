@@ -38,8 +38,8 @@ fun NexoAdaptiveFormLayout(
     headerText: String,
     errorText: String? = null,
     logo: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     formContent: @Composable ColumnScope.() -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val configuration = currentDeviceConfiguration()
     val headerColor = if (configuration == DeviceConfiguration.MOBILE_LANDSCAPE) {
@@ -76,6 +76,7 @@ fun NexoAdaptiveFormLayout(
                 modifier = modifier
                     .fillMaxSize()
                     .consumeWindowInsets(WindowInsets.displayCutout)
+                    .consumeWindowInsets(WindowInsets.navigationBars)
             ) {
                 Column(
                     modifier = Modifier
@@ -87,7 +88,8 @@ fun NexoAdaptiveFormLayout(
                     AuthHeaderSection(
                         headerText = headerText,
                         headerColor = headerColor,
-                        errorText = errorText
+                        errorText = errorText,
+                        headerTextAlignment = TextAlign.Start
                     )
                 }
 
@@ -95,7 +97,7 @@ fun NexoAdaptiveFormLayout(
                     modifier = Modifier
                         .weight(1f),
                 ) {
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                     formContent()
                 }
             }
@@ -120,7 +122,6 @@ fun NexoAdaptiveFormLayout(
                         .background(MaterialTheme.colorScheme.surface)
                         .padding(horizontal = 24.dp, vertical = 32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
                     AuthHeaderSection(
                         headerText = headerText,
@@ -140,12 +141,13 @@ fun ColumnScope.AuthHeaderSection(
     headerColor: Color,
     modifier: Modifier = Modifier,
     errorText: String? = null,
+    headerTextAlignment: TextAlign = TextAlign.Center
 ) {
     Text(
         text = headerText,
         style = MaterialTheme.typography.titleLarge,
         color = headerColor,
-        textAlign = TextAlign.Center,
+        textAlign = headerTextAlignment,
         modifier = modifier.fillMaxWidth()
     )
     AnimatedVisibility(
@@ -156,8 +158,8 @@ fun ColumnScope.AuthHeaderSection(
                 text = errorText,
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = headerTextAlignment
             )
         }
     }
