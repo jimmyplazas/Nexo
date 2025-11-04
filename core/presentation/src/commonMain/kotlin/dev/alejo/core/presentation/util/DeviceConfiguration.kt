@@ -7,6 +7,11 @@ import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_EXPANDED_
 import androidx.window.core.layout.WindowSizeClass.Companion.HEIGHT_DP_MEDIUM_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND
 import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND
+import dev.alejo.core.presentation.util.DeviceConfiguration.DESKTOP
+import dev.alejo.core.presentation.util.DeviceConfiguration.MOBILE_LANDSCAPE
+import dev.alejo.core.presentation.util.DeviceConfiguration.MOBILE_PORTRAIT
+import dev.alejo.core.presentation.util.DeviceConfiguration.TABLET_LANDSCAPE
+import dev.alejo.core.presentation.util.DeviceConfiguration.TABLET_PORTRAIT
 
 /**
  * A Composable function that determines the current [DeviceConfiguration] based on the window size.
@@ -49,7 +54,7 @@ enum class DeviceConfiguration {
                     minWidthDp < WIDTH_DP_MEDIUM_LOWER_BOUND &&
                             minHeightDp >= HEIGHT_DP_MEDIUM_LOWER_BOUND -> MOBILE_PORTRAIT
                     minWidthDp >= WIDTH_DP_EXPANDED_LOWER_BOUND &&
-                            minHeightDp < HEIGHT_DP_MEDIUM_LOWER_BOUND -> MOBILE_LANDSCAPE
+                            minHeightDp <= HEIGHT_DP_MEDIUM_LOWER_BOUND -> MOBILE_LANDSCAPE
                     minWidthDp in WIDTH_DP_MEDIUM_LOWER_BOUND..WIDTH_DP_EXPANDED_LOWER_BOUND &&
                             minHeightDp >= HEIGHT_DP_EXPANDED_LOWER_BOUND -> TABLET_PORTRAIT
                     minWidthDp >= WIDTH_DP_EXPANDED_LOWER_BOUND &&
