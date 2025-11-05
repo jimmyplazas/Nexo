@@ -113,8 +113,7 @@ fun NexoButton(
                 modifier = Modifier
                     .size(15.dp)
                     .alpha(if (isLoading) 1f else 0f),
-                strokeWidth = 1.5.dp,
-                color = Color.Black
+                strokeWidth = 1.5.dp
             )
 
             Row(
