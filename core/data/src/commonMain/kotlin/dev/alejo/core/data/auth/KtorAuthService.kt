@@ -1,5 +1,6 @@
 package dev.alejo.core.data.auth
 
+import dev.alejo.core.data.dto.requests.EmailRequest
 import dev.alejo.core.data.dto.requests.RegisterRequest
 import dev.alejo.core.data.networking.post
 import dev.alejo.core.domain.EmptyResult
@@ -22,6 +23,15 @@ class KtorAuthService(
                 username = username,
                 password = password
             )
+        )
+    }
+
+    override suspend fun resendVerificationEmail(
+        email: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/resend-verification",
+            body = EmailRequest(email = email)
         )
     }
 }
