@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.alejo.core.designsystem.components.brand.NexoFailureIcon
 import dev.alejo.core.designsystem.components.brand.NexoSuccessIcon
 import dev.alejo.core.designsystem.components.buttons.NexoButton
@@ -36,10 +35,11 @@ import nexo.feature.auth.presentation.generated.resources.login
 import nexo.feature.auth.presentation.generated.resources.verifying_account
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EmailVerificationRoot(
-    viewModel: EmailVerificationViewModel = viewModel()
+    viewModel: EmailVerificationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
