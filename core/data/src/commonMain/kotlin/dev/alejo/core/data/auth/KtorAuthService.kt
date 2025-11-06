@@ -1,6 +1,7 @@
 package dev.alejo.core.data.auth
 
 import dev.alejo.core.data.dto.requests.EmailRequest
+import dev.alejo.core.data.dto.requests.LoginRequest
 import dev.alejo.core.data.dto.requests.RegisterRequest
 import dev.alejo.core.data.networking.get
 import dev.alejo.core.data.networking.post
@@ -39,6 +40,19 @@ class KtorAuthService(
         return httpClient.get(
             route = "/auth/verify",
             queryParams = mapOf("token" to token)
+        )
+    }
+
+    override suspend fun login(
+        email: String,
+        password: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/login",
+            body = LoginRequest(
+                email = email,
+                password = password
+            )
         )
     }
 
