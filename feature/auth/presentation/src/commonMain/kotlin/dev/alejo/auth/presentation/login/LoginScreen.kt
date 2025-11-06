@@ -1,11 +1,18 @@
 package dev.alejo.auth.presentation.login
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,7 +35,6 @@ import nexo.feature.auth.presentation.generated.resources.email
 import nexo.feature.auth.presentation.generated.resources.email_placeholder
 import nexo.feature.auth.presentation.generated.resources.forgot_password
 import nexo.feature.auth.presentation.generated.resources.login
-import nexo.feature.auth.presentation.generated.resources.login_failed
 import nexo.feature.auth.presentation.generated.resources.password
 import nexo.feature.auth.presentation.generated.resources.welcome_back
 import org.jetbrains.compose.resources.stringResource
@@ -68,69 +74,77 @@ fun LoginScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit,
 ) {
-    NexoAdaptiveFormLayout(
-        headerText = stringResource(Res.string.welcome_back),
-        errorText = state.error?.asString() ?: stringResource(Res.string.login_failed),
-        logo = { NexoBrandLogo() }
-    ) {
+    Scaffold(
+        contentWindowInsets = WindowInsets.statusBars
+            .union(WindowInsets.displayCutout)
+            .union(WindowInsets.ime)
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            NexoAdaptiveFormLayout(
+                headerText = stringResource(Res.string.welcome_back),
+                errorText = state.error?.asString(),
+                logo = { NexoBrandLogo() }
+            ) {
 
-        NexoTextField(
-            state = state.emailTextFieldState,
-            placeholder = stringResource(Res.string.email_placeholder),
-            title = stringResource(Res.string.email),
-            keyboardType = KeyboardType.Email,
-            singleLine = true
-        )
+                NexoTextField(
+                    state = state.emailTextFieldState,
+                    placeholder = stringResource(Res.string.email_placeholder),
+                    title = stringResource(Res.string.email),
+                    keyboardType = KeyboardType.Email,
+                    singleLine = true
+                )
 
-        Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-        NexoPasswordTextField(
-            state = state.emailTextFieldState,
-            placeholder = stringResource(Res.string.password),
-            title = stringResource(Res.string.password),
-            isPasswordVisible = state.isPasswordVisible,
-            onToggleVisibilityClick = {
-                onAction(LoginAction.OnTogglePasswordVisibility)
+                NexoPasswordTextField(
+                    state = state.passwordTextFieldState,
+                    placeholder = stringResource(Res.string.password),
+                    title = stringResource(Res.string.password),
+                    isPasswordVisible = state.isPasswordVisible,
+                    onToggleVisibilityClick = {
+                        onAction(LoginAction.OnTogglePasswordVisibility)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = stringResource(Res.string.forgot_password),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier
+                        .padding(horizontal = 2.dp)
+                        .align(Alignment.End)
+                        .clickable {
+                            onAction(LoginAction.OnForgotPasswordClick)
+                        }
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                NexoButton(
+                    text = stringResource(Res.string.login),
+                    onClick = {
+                        onAction(LoginAction.OnLoginClick)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = state.canLogin,
+                    isLoading = state.isLoggingIn
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                NexoButton(
+                    text = stringResource(Res.string.create_account),
+                    onClick = {
+                        onAction(LoginAction.OnSignUpClick)
+                    },
+                    style = NexoButtonStyle.SECONDARY,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
             }
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = stringResource(Res.string.forgot_password),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.tertiary,
-            modifier = Modifier
-                .padding(horizontal = 2.dp)
-                .align(Alignment.End)
-                .clickable {
-                    onAction(LoginAction.OnForgotPasswordClick)
-                }
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        NexoButton(
-            text = stringResource(Res.string.login),
-            onClick = {
-                onAction(LoginAction.OnLoginClick)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = state.canLogin,
-            isLoading = state.isLoggingIn
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        NexoButton(
-            text = stringResource(Res.string.create_account),
-            onClick = {
-                onAction(LoginAction.OnSignUpClick)
-            },
-            style = NexoButtonStyle.SECONDARY,
-            modifier = Modifier.fillMaxWidth()
-        )
-
+        }
     }
 }
 
