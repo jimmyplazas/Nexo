@@ -75,8 +75,10 @@ fun NexoAdaptiveFormLayout(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = modifier
                     .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
                     .consumeWindowInsets(WindowInsets.displayCutout)
                     .consumeWindowInsets(WindowInsets.navigationBars)
+                    .padding(horizontal = 24.dp)
             ) {
                 Column(
                     modifier = Modifier
