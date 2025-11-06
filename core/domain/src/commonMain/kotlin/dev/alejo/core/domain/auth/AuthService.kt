@@ -9,8 +9,7 @@ interface AuthService {
         username: String,
         password: String
     ): EmptyResult<DataError.Remote>
-
     suspend fun resendVerificationEmail(email: String): EmptyResult<DataError.Remote>
-
     suspend fun verifyEmail(token: String): EmptyResult<DataError.Remote>
+    suspend fun login(email: String, password: String): EmptyResult<DataError.Remote>
 }
