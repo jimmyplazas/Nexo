@@ -38,7 +38,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RegisterRoot(
     viewModel: RegisterViewModel = koinViewModel(),
-    onRegisterSuccess: (String) -> Unit
+    onRegisterSuccess: (String) -> Unit,
+    onLoginClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -51,7 +52,13 @@ fun RegisterRoot(
 
     RegisterScreen(
         state = state,
-        onAction = viewModel::onAction,
+        onAction = { action ->
+            when (action) {
+                RegisterAction.OnLoginClick -> onLoginClick()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        },
         snackbarHostState = snackbarHostState
     )
 }
