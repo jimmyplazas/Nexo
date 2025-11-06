@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.alejo.auth.domain.EmailValidator
 import dev.alejo.core.domain.auth.AuthService
+import dev.alejo.core.domain.auth.SessionStorage
 import dev.alejo.core.domain.onFailure
 import dev.alejo.core.domain.onSuccess
 import dev.alejo.core.domain.util.DataError
@@ -27,7 +28,8 @@ import nexo.feature.auth.presentation.generated.resources.error_email_not_verifi
 import nexo.feature.auth.presentation.generated.resources.error_invalid_credentials
 
 class LoginViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val sessionStorage: SessionStorage
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -107,10 +109,12 @@ class LoginViewModel(
                     email = email,
                     password = password
                 )
-                .onSuccess {
+                .onSuccess { authInfo ->
+                    sessionStorage.set(authInfo)
                     _state.update {
                         it.copy(isLoggingIn = false)
                     }
+
                     eventsChannel.send(LoginEvent.Success)
                 }
                 .onFailure { error ->
