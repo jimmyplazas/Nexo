@@ -25,7 +25,6 @@ fun NavGraphBuilder.authGraph(
                 },
                 onCreateAccount = {
                     navController.navigate(AuthGraphRoutes.Register) {
-                        popUpTo(AuthGraphRoutes.Login)
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -39,7 +38,7 @@ fun NavGraphBuilder.authGraph(
                 },
                 onLoginClick = {
                     navController.navigate(AuthGraphRoutes.Login) {
-                        popUpTo(AuthGraphRoutes.Register) {
+                        popUpTo<AuthGraphRoutes.Register> {
                             inclusive = true
                             saveState = true
                         }
@@ -50,7 +49,18 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable<AuthGraphRoutes.RegisterSuccess> {
-            RegisterSuccessRoot()
+            RegisterSuccessRoot(
+                onLoginClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo<AuthGraphRoutes.RegisterSuccess> {
+                            inclusive = true
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
         composable<AuthGraphRoutes.EmailVerification>(
             deepLinks = listOf(
@@ -62,7 +72,25 @@ fun NavGraphBuilder.authGraph(
                 },
             )
         ) {
-            EmailVerificationRoot()
+            EmailVerificationRoot(
+                onLoginClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo<AuthGraphRoutes.EmailVerification> {
+                            inclusive = true
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onCloseClick = {
+                    navController.navigate(AuthGraphRoutes.Login) {
+                        popUpTo<AuthGraphRoutes.EmailVerification> {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
     }
 }
