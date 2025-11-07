@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.core.designsystem.components.brand.NexoBrandLogo
 import dev.alejo.core.designsystem.components.buttons.NexoButton
 import dev.alejo.core.designsystem.components.layout.NexoAdaptiveFormLayout
+import dev.alejo.core.designsystem.components.layout.NexoScaffold
 import dev.alejo.core.designsystem.components.textfields.NexoTextField
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
@@ -45,40 +46,42 @@ fun ForgotPasswordScreen(
     state: ForgotPasswordState,
     onAction: (ForgotPasswordAction) -> Unit,
 ) {
-    NexoAdaptiveFormLayout(
-        headerText = stringResource(Res.string.forgot_password_title),
-        errorText = state.error?.asString(),
-        logo = { NexoBrandLogo() }
-    ) {
-        NexoTextField(
-            state = state.emailTextFieldState,
-            placeholder = stringResource(Res.string.email_placeholder),
-            singleLine = true,
-            supportingText = state.error?.asString(),
-            keyboardType = KeyboardType.Email,
-            title = stringResource(Res.string.email),
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        NexoButton(
-            text = stringResource(Res.string.submit),
-            onClick = { onAction(ForgotPasswordAction.OnSubmitClick) },
-            isLoading = state.isLoading,
-            enabled = !state.isLoading && state.canSubmit,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        if (state.isEmailSentSuccessfully) {
-            Text(
-                text = stringResource(Res.string.forgot_password_email_sent_successfully),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.extended.success,
-                textAlign = TextAlign.Center
+    NexoScaffold {
+        NexoAdaptiveFormLayout(
+            headerText = stringResource(Res.string.forgot_password_title),
+            errorText = state.error?.asString(),
+            logo = { NexoBrandLogo() }
+        ) {
+            NexoTextField(
+                state = state.emailTextFieldState,
+                placeholder = stringResource(Res.string.email_placeholder),
+                singleLine = true,
+                supportingText = state.error?.asString(),
+                keyboardType = KeyboardType.Email,
+                title = stringResource(Res.string.email),
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            NexoButton(
+                text = stringResource(Res.string.submit),
+                onClick = { onAction(ForgotPasswordAction.OnSubmitClick) },
+                isLoading = state.isLoading,
+                enabled = !state.isLoading && state.canSubmit,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (state.isEmailSentSuccessfully) {
+                Text(
+                    text = stringResource(Res.string.forgot_password_email_sent_successfully),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.extended.success,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
