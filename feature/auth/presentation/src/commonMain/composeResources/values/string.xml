@@ -2,6 +2,7 @@
 <resources>
     <string name="welcome_to_nexo">Welcome to Nexo!</string>
     <string name="welcome_back">Welcome back!</string>
+    <string name="forgot_password_title">Forgot password</string>
     <string name="login_failed">Login failed, try again!</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="create_account">Create Account</string>
@@ -19,6 +20,7 @@
         Unable to verify your email. Maybe the link is invalid or has expired.
     </string>
     <string name="close">Close</string>
+    <string name="submit">Submit</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -34,4 +36,5 @@
     <string name="error_invalid_username">The username must be between 3 and 20 characters</string>
     <string name="error_invalid_credentials">The email or password is incorrect</string>
     <string name="error_email_not_verified">Unable to login because your email isn't verified</string>
+    <string name="forgot_password_email_sent_successfully">We've successfully sent you an email with the link to reset your password</string>
 </resources>
