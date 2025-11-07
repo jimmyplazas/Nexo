@@ -1,0 +1,171 @@
+package dev.alejo.auth.presentation.email_verification
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.alejo.core.designsystem.components.brand.NexoFailureIcon
+import dev.alejo.core.designsystem.components.brand.NexoSuccessIcon
+import dev.alejo.core.designsystem.components.buttons.NexoButton
+import dev.alejo.core.designsystem.components.buttons.NexoButtonStyle
+import dev.alejo.core.designsystem.components.layout.NexoAdaptiveResultLayout
+import dev.alejo.core.designsystem.components.layout.NexoScaffold
+import dev.alejo.core.designsystem.components.layout.NexoSimpleResultLayout
+import dev.alejo.core.designsystem.theme.NexoTheme
+import dev.alejo.core.designsystem.theme.extended
+import nexo.feature.auth.presentation.generated.resources.Res
+import nexo.feature.auth.presentation.generated.resources.close
+import nexo.feature.auth.presentation.generated.resources.email_verified_failed
+import nexo.feature.auth.presentation.generated.resources.email_verified_failed_desc
+import nexo.feature.auth.presentation.generated.resources.email_verified_successfully
+import nexo.feature.auth.presentation.generated.resources.email_verified_successfully_desc
+import nexo.feature.auth.presentation.generated.resources.login
+import nexo.feature.auth.presentation.generated.resources.verifying_account
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun EmailVerificationRoot(
+    viewModel: EmailVerificationViewModel = koinViewModel(),
+    onLoginClick: () -> Unit,
+    onCloseClick: () -> Unit
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    EmailVerificationScreen(
+        state = state,
+        onAction = { action ->
+            when (action) {
+                is EmailVerificationAction.OnLoginClick -> onLoginClick()
+                is EmailVerificationAction.OnCloseClick -> onCloseClick()
+            }
+            viewModel.onAction(action)
+        }
+    )
+}
+
+@Composable
+fun EmailVerificationScreen(
+    state: EmailVerificationState,
+    onAction: (EmailVerificationAction) -> Unit,
+) {
+    NexoScaffold {
+        NexoAdaptiveResultLayout {
+            when {
+                state.isVerifying -> {
+                    VerifyingContent(modifier = Modifier.fillMaxWidth())
+                }
+
+                state.isVerified -> {
+                    NexoSimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_successfully),
+                        description = stringResource(Res.string.email_verified_successfully_desc),
+                        icon = { NexoSuccessIcon() },
+                        primaryButton = {
+                            NexoButton(
+                                text = stringResource(Res.string.login),
+                                onClick = { onAction(EmailVerificationAction.OnLoginClick) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    )
+                }
+
+                else -> {
+                    NexoSimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_failed),
+                        description = stringResource(Res.string.email_verified_failed_desc),
+                        icon = {
+                            Spacer(modifier = Modifier.size(32.dp))
+                            NexoFailureIcon(modifier = Modifier.size(80.dp))
+                            Spacer(modifier = Modifier.size(32.dp))
+                        },
+                        primaryButton = {
+                            NexoButton(
+                                text = stringResource(Res.string.close),
+                                onClick = { onAction(EmailVerificationAction.OnCloseClick) },
+                                modifier = Modifier.fillMaxWidth(),
+                                style = NexoButtonStyle.SECONDARY
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun VerifyingContent(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .heightIn(min = 200.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(64.dp),
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = stringResource(Res.string.verifying_account),
+            color = MaterialTheme.colorScheme.extended.textSecondary,
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmailVerificationErrorPreview() {
+    NexoTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmailVerificationVerifyingPreview() {
+    NexoTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationState(
+                isVerifying = true
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmailVerificationSuccessPreview() {
+    NexoTheme {
+        EmailVerificationScreen(
+            state = EmailVerificationState(
+                isVerified = true
+            ),
+            onAction = {}
+        )
+    }
+}

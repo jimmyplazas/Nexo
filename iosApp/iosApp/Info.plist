@@ -4,5 +4,16 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>nexo.jimmyplazas.dev</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nexo</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
