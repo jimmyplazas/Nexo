@@ -12,8 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting">
         <activity
-            android:exported="true"
-            android:name=".MainActivity">
+            android:name=".MainActivity"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,22 +23,28 @@
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="https"
-                    android:host="nexo.jimmyplazas.dev"
-                    android:pathPrefix="/api/auth/verify"/>
+
+                <data android:scheme="https" />
+                <data android:host="nexo.jimmyplazas.dev" />
+
+                <data android:pathPrefix="/api/auth/verify" />
+                <data android:pathPrefix="/api/auth/reset-password" />
             </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="nexo"
-                    android:host="nexo.jimmyplazas.dev"
-                    android:pathPrefix="/api/auth/verify"/>
+
+                <data android:scheme="nexo" />
+                <data android:host="nexo.jimmyplazas.dev" />
+
+                <data android:pathPrefix="/api/auth/verify" />
+                <data android:pathPrefix="/api/auth/reset-password" />
             </intent-filter>
 
         </activity>
