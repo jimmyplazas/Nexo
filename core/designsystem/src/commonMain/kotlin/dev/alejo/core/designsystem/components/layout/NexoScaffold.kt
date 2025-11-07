@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun NexoSnackbarScaffold(
-    snackbarHostState: SnackbarHostState,
+fun NexoScaffold(
+    snackbarHostState: SnackbarHostState? = null,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
@@ -26,11 +26,13 @@ fun NexoSnackbarScaffold(
             .union(WindowInsets.displayCutout)
             .union(WindowInsets.ime),
         snackbarHost = {
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier
-                    .padding(bottom = 24.dp)
-            )
+            snackbarHostState?.let {
+                SnackbarHost(
+                    hostState = it,
+                    modifier = Modifier
+                        .padding(bottom = 24.dp)
+                )
+            }
         }
     ) { innerPadding ->
         Box(
