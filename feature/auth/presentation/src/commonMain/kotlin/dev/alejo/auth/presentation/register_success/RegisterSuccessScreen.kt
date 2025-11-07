@@ -12,7 +12,7 @@ import dev.alejo.core.designsystem.components.buttons.NexoButton
 import dev.alejo.core.designsystem.components.buttons.NexoButtonStyle
 import dev.alejo.core.designsystem.components.layout.NexoAdaptiveResultLayout
 import dev.alejo.core.designsystem.components.layout.NexoSimpleResultLayout
-import dev.alejo.core.designsystem.components.layout.NexoSnackbarScaffold
+import dev.alejo.core.designsystem.components.layout.NexoScaffold
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.presentation.util.ObserveAsEvents
 import nexo.feature.auth.presentation.generated.resources.Res
@@ -68,7 +68,7 @@ fun RegisterSuccessScreen(
     onAction: (RegisterSuccessAction) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
-    NexoSnackbarScaffold(
+    NexoScaffold(
         snackbarHostState = snackbarHostState
     ) {
         NexoAdaptiveResultLayout {
