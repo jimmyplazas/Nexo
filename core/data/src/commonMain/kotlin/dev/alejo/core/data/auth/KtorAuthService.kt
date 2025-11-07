@@ -23,7 +23,7 @@ class KtorAuthService(
         email: String,
         password: String
     ): Result<AuthInfo, DataError.Remote> {
-        return httpClient.post< LoginRequest, AuthInfoSerializable>(
+        return httpClient.post<LoginRequest, AuthInfoSerializable>(
             route = "/auth/login",
             body = LoginRequest(
                 email = email,
@@ -60,6 +60,13 @@ class KtorAuthService(
         return httpClient.get(
             route = "/auth/verify",
             queryParams = mapOf("token" to token)
+        )
+    }
+
+    override suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote> {
+        return httpClient.post<EmailRequest, Unit>(
+            route = "/auth/forgot-password",
+            body = EmailRequest(email = email)
         )
     }
 
