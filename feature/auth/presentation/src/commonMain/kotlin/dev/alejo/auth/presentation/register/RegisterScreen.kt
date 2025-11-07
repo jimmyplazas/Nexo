@@ -15,7 +15,7 @@ import dev.alejo.core.designsystem.components.brand.NexoBrandLogo
 import dev.alejo.core.designsystem.components.buttons.NexoButton
 import dev.alejo.core.designsystem.components.buttons.NexoButtonStyle
 import dev.alejo.core.designsystem.components.layout.NexoAdaptiveFormLayout
-import dev.alejo.core.designsystem.components.layout.NexoSnackbarScaffold
+import dev.alejo.core.designsystem.components.layout.NexoScaffold
 import dev.alejo.core.designsystem.components.textfields.NexoPasswordTextField
 import dev.alejo.core.designsystem.components.textfields.NexoTextField
 import dev.alejo.core.designsystem.theme.NexoTheme
@@ -69,7 +69,7 @@ fun RegisterScreen(
     onAction: (RegisterAction) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
-    NexoSnackbarScaffold(
+    NexoScaffold(
         snackbarHostState = snackbarHostState,
         content = {
             NexoAdaptiveFormLayout(
