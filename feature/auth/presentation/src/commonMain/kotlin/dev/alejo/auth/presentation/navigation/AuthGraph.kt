@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import dev.alejo.auth.presentation.email_verification.EmailVerificationRoot
+import dev.alejo.auth.presentation.forgot_password.ForgotPasswordRoot
 import dev.alejo.auth.presentation.login.LoginRoot
 import dev.alejo.auth.presentation.register.RegisterRoot
 import dev.alejo.auth.presentation.register_success.RegisterSuccessRoot
@@ -91,6 +92,9 @@ fun NavGraphBuilder.authGraph(
                     }
                 }
             )
+        }
+        composable<AuthGraphRoutes.ForgotPassword> {
+            ForgotPasswordRoot()
         }
     }
 }
