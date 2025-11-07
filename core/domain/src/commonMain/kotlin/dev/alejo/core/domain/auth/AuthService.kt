@@ -17,4 +17,5 @@ interface AuthService {
     suspend fun resendVerificationEmail(email: String): EmptyResult<DataError.Remote>
     suspend fun verifyEmail(token: String): EmptyResult<DataError.Remote>
     suspend fun forgotPassword(email: String): EmptyResult<DataError.Remote>
+    suspend fun resetPassword(token: String, newPassword: String): EmptyResult<DataError.Remote>
 }
