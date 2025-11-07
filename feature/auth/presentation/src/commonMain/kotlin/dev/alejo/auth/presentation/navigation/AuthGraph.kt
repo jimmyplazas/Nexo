@@ -10,6 +10,7 @@ import dev.alejo.auth.presentation.forgot_password.ForgotPasswordRoot
 import dev.alejo.auth.presentation.login.LoginRoot
 import dev.alejo.auth.presentation.register.RegisterRoot
 import dev.alejo.auth.presentation.register_success.RegisterSuccessRoot
+import dev.alejo.auth.presentation.reset_password.ResetPasswordRoot
 
 fun NavGraphBuilder.authGraph(
     navController: NavController,
@@ -95,6 +96,18 @@ fun NavGraphBuilder.authGraph(
         }
         composable<AuthGraphRoutes.ForgotPassword> {
             ForgotPasswordRoot()
+        }
+        composable<AuthGraphRoutes.ResetPassword>(
+            deepLinks = listOf(
+                navDeepLink {
+                    this.uriPattern = "https://nexo.jimmyplazas.dev/api/auth/reset-password?token={token}"
+                },
+                navDeepLink {
+                    this.uriPattern = "nexo://nexo.jimmyplazas.dev/api/auth/reset-password?token={token}"
+                }
+            )
+        ) {
+            ResetPasswordRoot()
         }
     }
 }
