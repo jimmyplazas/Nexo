@@ -30,6 +30,7 @@ import dev.alejo.core.designsystem.components.brand.NexoBrandLogo
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.presentation.util.DeviceConfiguration
+import dev.alejo.core.presentation.util.clearFocusOnTap
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -52,6 +53,7 @@ fun NexoAdaptiveFormLayout(
         DeviceConfiguration.MOBILE_PORTRAIT -> {
             NexoSurface(
                 modifier = modifier
+                    .clearFocusOnTap()
                     .consumeWindowInsets(WindowInsets.navigationBars)
                     .consumeWindowInsets(WindowInsets.displayCutout),
                 header = {
@@ -74,6 +76,7 @@ fun NexoAdaptiveFormLayout(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = modifier
+                    .clearFocusOnTap()
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
                     .consumeWindowInsets(WindowInsets.displayCutout)
@@ -109,6 +112,7 @@ fun NexoAdaptiveFormLayout(
         DeviceConfiguration.DESKTOP -> {
             Column(
                 modifier = modifier
+                    .clearFocusOnTap()
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
                     .padding(top = 32.dp),
