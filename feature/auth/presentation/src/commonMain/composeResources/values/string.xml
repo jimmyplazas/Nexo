@@ -5,6 +5,7 @@
     <string name="forgot_password_title">Forgot password</string>
     <string name="login_failed">Login failed, try again!</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="set_new_password">Set New Password</string>
     <string name="create_account">Create Account</string>
     <string name="account_successfully_created">Nexo account successfully created!</string>
     <string name="email_verification_sent_to_x">We've sent a verification email to %1$s</string>
@@ -19,17 +20,20 @@
     <string name="email_verified_failed_desc">
         Unable to verify your email. Maybe the link is invalid or has expired.
     </string>
+
     <string name="close">Close</string>
     <string name="submit">Submit</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="new_password">New Password</string>
     <string name="username_placeholder">Nexo</string>
     <string name="email_placeholder">hello@nexo.com</string>
     <string name="register">Register</string>
     <string name="login">Log In</string>
     <string name="username_hint">Use between 3 and 20 characters for your username</string>
     <string name="password_hint">Use 9+ characters, at least one digit and one uppercase letter</string>
+
     <string name="error_account_exists">An account with that email or username already exists</string>
     <string name="error_invalid_password">Password must be at least 9 characters and include on digit and on uppercase letter</string>
     <string name="error_invalid_email">This is not a valid email</string>
@@ -37,4 +41,7 @@
     <string name="error_invalid_credentials">The email or password is incorrect</string>
     <string name="error_email_not_verified">Unable to login because your email isn't verified</string>
     <string name="forgot_password_email_sent_successfully">We've successfully sent you an email with the link to reset your password</string>
+    <string name="error_reset_password_token_invalid">It seems like the reset password link is not valid or has expired. Please request a new email.</string>
+
+    <string name="reset_password_successfully">Your password has successfully been changed. You can now log in with your new password.</string>
 </resources>
