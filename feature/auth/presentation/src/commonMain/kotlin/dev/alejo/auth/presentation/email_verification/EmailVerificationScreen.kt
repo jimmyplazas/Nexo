@@ -22,6 +22,7 @@ import dev.alejo.core.designsystem.components.brand.NexoSuccessIcon
 import dev.alejo.core.designsystem.components.buttons.NexoButton
 import dev.alejo.core.designsystem.components.buttons.NexoButtonStyle
 import dev.alejo.core.designsystem.components.layout.NexoAdaptiveResultLayout
+import dev.alejo.core.designsystem.components.layout.NexoScaffold
 import dev.alejo.core.designsystem.components.layout.NexoSimpleResultLayout
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
@@ -62,45 +63,47 @@ fun EmailVerificationScreen(
     state: EmailVerificationState,
     onAction: (EmailVerificationAction) -> Unit,
 ) {
-    NexoAdaptiveResultLayout {
-        when {
-            state.isVerifying -> {
-                VerifyingContent(modifier = Modifier.fillMaxWidth())
-            }
+    NexoScaffold {
+        NexoAdaptiveResultLayout {
+            when {
+                state.isVerifying -> {
+                    VerifyingContent(modifier = Modifier.fillMaxWidth())
+                }
 
-            state.isVerified -> {
-                NexoSimpleResultLayout(
-                    title = stringResource(Res.string.email_verified_successfully),
-                    description = stringResource(Res.string.email_verified_successfully_desc),
-                    icon = { NexoSuccessIcon() },
-                    primaryButton = {
-                        NexoButton(
-                            text = stringResource(Res.string.login),
-                            onClick = { onAction(EmailVerificationAction.OnLoginClick) },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                )
-            }
+                state.isVerified -> {
+                    NexoSimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_successfully),
+                        description = stringResource(Res.string.email_verified_successfully_desc),
+                        icon = { NexoSuccessIcon() },
+                        primaryButton = {
+                            NexoButton(
+                                text = stringResource(Res.string.login),
+                                onClick = { onAction(EmailVerificationAction.OnLoginClick) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    )
+                }
 
-            else -> {
-                NexoSimpleResultLayout(
-                    title = stringResource(Res.string.email_verified_failed),
-                    description = stringResource(Res.string.email_verified_failed_desc),
-                    icon = {
-                        Spacer(modifier = Modifier.size(32.dp))
-                        NexoFailureIcon(modifier = Modifier.size(80.dp))
-                        Spacer(modifier = Modifier.size(32.dp))
-                    },
-                    primaryButton = {
-                        NexoButton(
-                            text = stringResource(Res.string.close),
-                            onClick = { onAction(EmailVerificationAction.OnCloseClick) },
-                            modifier = Modifier.fillMaxWidth(),
-                            style = NexoButtonStyle.SECONDARY
-                        )
-                    }
-                )
+                else -> {
+                    NexoSimpleResultLayout(
+                        title = stringResource(Res.string.email_verified_failed),
+                        description = stringResource(Res.string.email_verified_failed_desc),
+                        icon = {
+                            Spacer(modifier = Modifier.size(32.dp))
+                            NexoFailureIcon(modifier = Modifier.size(80.dp))
+                            Spacer(modifier = Modifier.size(32.dp))
+                        },
+                        primaryButton = {
+                            NexoButton(
+                                text = stringResource(Res.string.close),
+                                onClick = { onAction(EmailVerificationAction.OnCloseClick) },
+                                modifier = Modifier.fillMaxWidth(),
+                                style = NexoButtonStyle.SECONDARY
+                            )
+                        }
+                    )
+                }
             }
         }
     }
