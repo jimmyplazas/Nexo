@@ -29,6 +29,7 @@ fun NexoBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         dragHandle = null,
+        sheetState = sheetState,
         contentWindowInsets = { WindowInsets() },
         modifier = modifier
             .statusBarsPadding()
