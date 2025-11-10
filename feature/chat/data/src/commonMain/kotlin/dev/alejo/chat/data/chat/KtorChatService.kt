@@ -1,0 +1,27 @@
+package dev.alejo.chat.data.chat
+
+import dev.alejo.chat.data.dto.ChatDto
+import dev.alejo.chat.data.dto.request.CreateChatRequest
+import dev.alejo.chat.data.mappers.toDomain
+import dev.alejo.chat.domain.chat.ChatService
+import dev.alejo.chat.domain.models.Chat
+import dev.alejo.core.data.networking.post
+import dev.alejo.core.domain.Result
+import dev.alejo.core.domain.map
+import dev.alejo.core.domain.util.DataError
+import io.ktor.client.HttpClient
+
+class KtorChatService(
+    private val httpClient: HttpClient
+) : ChatService {
+    override suspend fun createChat(
+        otherUserIds: List<String>
+    ): Result<Chat, DataError.Remote> {
+        return httpClient.post<CreateChatRequest, ChatDto>(
+            route = "/chat",
+            body = CreateChatRequest(
+                otherUserIds = otherUserIds
+            )
+        ).map { it.toDomain() }
+    }
+}
