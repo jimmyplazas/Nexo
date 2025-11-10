@@ -11,7 +11,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun NexoStackedAvatars(
-    avatars: List<AvatarUi>,
+    avatars: List<ChatParticipantUi>,
     modifier: Modifier = Modifier,
     size: AvatarSize = AvatarSize.SMALL,
     maxVisible: Int = 2,
@@ -51,22 +51,22 @@ fun NexoStackedAvatarsPreview() {
     NexoTheme {
         NexoStackedAvatars(
             avatars = listOf(
-                AvatarUi(
+                ChatParticipantUi(
                     id = "1",
                     initials = "AA",
                     username = "Alejo"
                 ),
-                AvatarUi(
+                ChatParticipantUi(
                     id = "2",
                     initials = "BB",
                     username = "Bernadr"
                 ),
-                AvatarUi(
+                ChatParticipantUi(
                     id = "3",
                     initials = "CC",
                     username = "Charlie"
                 ),
-                AvatarUi(
+                ChatParticipantUi(
                     id = "4",
                     initials = "DD",
                     username = "Daniel"
