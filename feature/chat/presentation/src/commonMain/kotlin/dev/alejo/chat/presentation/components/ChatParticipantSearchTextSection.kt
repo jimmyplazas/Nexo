@@ -36,7 +36,7 @@ fun ChatParticipantSearchTextSection(
                 vertical = 16.dp
             )
             .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         NexoTextField(
