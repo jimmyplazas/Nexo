@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.alejo.chat.presentation.create_chat.CreateChatRoot
 import dev.alejo.core.designsystem.theme.extended
+import dev.alejo.core.presentation.util.DialogSheetScopeViewModel
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -62,6 +64,7 @@ fun ChatListDetailAdaptiveLayout(
                             text = "Chat $chatIndex",
                             modifier = Modifier
                                 .clickable {
+                                    chatListDetailViewModel.onAction(ChatListDetailAction.OnCreateChatClick)
                                     chatListDetailViewModel
                                         .onAction(
                                             ChatListDetailAction.OnChatClick(chatIndex.toString())
@@ -95,4 +98,10 @@ fun ChatListDetailAdaptiveLayout(
             }
         }
     )
+
+    DialogSheetScopeViewModel(
+        visible = sharedState.dialogState is DialogState.CreateChat
+    ) {
+        CreateChatRoot()
+    }
 }
