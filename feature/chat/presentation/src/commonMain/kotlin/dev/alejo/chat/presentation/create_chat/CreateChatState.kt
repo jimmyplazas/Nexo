@@ -7,9 +7,8 @@ import dev.alejo.core.presentation.util.UiText
 data class CreateChatState(
     val queryTextState: TextFieldState = TextFieldState(),
     val selectedChatParticipants: List<ChatParticipantUi> = emptyList(),
-    val isAddingParticipant: Boolean = false,
-    val isLoadingParticipants: Boolean = false,
-    val canAddParticipants: Boolean = false,
+    val isSearching: Boolean = false,
+    val canAddParticipant: Boolean = false,
     val currentSearchResult: ChatParticipantUi? = null,
     val searchError: UiText? = null,
     val isCreatingChat: Boolean = false,
