@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.alejo.chat.domain.models.Chat
 import dev.alejo.chat.presentation.components.ChatParticipantSearchTextSection
 import dev.alejo.chat.presentation.components.ChatParticipantsSelectionSection
 import dev.alejo.chat.presentation.components.ManageChatBottomSection
@@ -28,6 +29,7 @@ import dev.alejo.core.designsystem.components.buttons.NexoButtonStyle
 import dev.alejo.core.designsystem.components.dialogs.NexoAdaptiveDialogSheetLayout
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.presentation.util.DeviceConfiguration
+import dev.alejo.core.presentation.util.ObserveAsEvents
 import dev.alejo.core.presentation.util.clearFocusOnTap
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
 import nexo.feature.chat.presentation.generated.resources.Res
@@ -40,10 +42,16 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateChatRoot(
     viewModel: CreateChatViewModel = koinViewModel(),
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onCreateChat: (Chat) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is CreateChatEvent.OnChatCreated -> onCreateChat(event.chat)
+        }
+    }
 
     NexoAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
@@ -133,6 +141,7 @@ fun CreateChatScreen(
                     onClick = { onAction(CreateChatAction.OnDismissDialog) }
                 )
             },
+            error = state.createChatError?.asString(),
             modifier = Modifier.fillMaxWidth()
         )
     }
