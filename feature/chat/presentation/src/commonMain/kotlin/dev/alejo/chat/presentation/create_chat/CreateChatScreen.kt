@@ -39,19 +39,24 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CreateChatRoot(
-    viewModel: CreateChatViewModel = koinViewModel()
+    viewModel: CreateChatViewModel = koinViewModel(),
+    onDismiss: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
 
     NexoAdaptiveDialogSheetLayout(
-        onDismiss = {
-            viewModel.onAction(CreateChatAction.OnDismissDialog)
-        }
+        onDismiss = onDismiss
     ) {
         CreateChatScreen(
             state = state,
-            onAction = viewModel::onAction
+            onAction = { action ->
+                when(action) {
+                    CreateChatAction.OnDismissDialog -> onDismiss()
+                    else -> Unit
+                }
+                viewModel.onAction(action)
+            }
         )
     }
 }
@@ -95,8 +100,8 @@ fun CreateChatScreen(
             onAddClick = {
                 onAction(CreateChatAction.OnAddClick)
             },
-            isSearchEnabled = state.canAddParticipants,
-            isLoading = state.isAddingParticipant,
+            isSearchEnabled = state.canAddParticipant,
+            isLoading = state.isSearching,
             modifier = Modifier
                 .fillMaxWidth(),
             error = state.searchError,
