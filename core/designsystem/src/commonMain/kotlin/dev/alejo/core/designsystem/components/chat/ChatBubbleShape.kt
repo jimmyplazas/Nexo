@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 
-enum class TrianglePosition {
+enum class CornerCurvePosition {
     LEFT,
     RIGHT
 }
@@ -20,7 +20,7 @@ enum class TrianglePosition {
 class ChatBubbleShape(
     private val curveSize: Dp = 16.dp,
     private val cornerRadius: Dp = 8.dp,
-    private val curvePosition: TrianglePosition
+    private val curvePosition: CornerCurvePosition
 ) : Shape {
 
     override fun createOutline(
@@ -32,7 +32,7 @@ class ChatBubbleShape(
         val cornerRadiusPx = with(density) { cornerRadius.toPx() }
 
         val path = when (curvePosition) {
-            TrianglePosition.LEFT -> {
+            CornerCurvePosition.LEFT -> {
                 val bodyPath = Path().apply {
                     addRoundRect(
                         roundRect = RoundRect(
@@ -48,7 +48,7 @@ class ChatBubbleShape(
                     )
                 }
 
-                val trianglePath = Path().apply {
+                val cornerCurvePath = Path().apply {
                     moveTo(0f, size.height)
 
                     cubicTo(
@@ -64,10 +64,10 @@ class ChatBubbleShape(
                     close()
                 }
 
-                Path.combine(PathOperation.Union, bodyPath, trianglePath)
+                Path.combine(PathOperation.Union, bodyPath, cornerCurvePath)
             }
 
-            TrianglePosition.RIGHT -> {
+            CornerCurvePosition.RIGHT -> {
                 val bodyPath = Path().apply {
                     addRoundRect(
                         roundRect = RoundRect(
@@ -83,7 +83,7 @@ class ChatBubbleShape(
                     )
                 }
 
-                val trianglePath = Path().apply {
+                val cornerCurvePath = Path().apply {
                     moveTo(size.width, size.height)
 
                     cubicTo(
@@ -99,7 +99,7 @@ class ChatBubbleShape(
                     close()
                 }
 
-                Path.combine(PathOperation.Union, bodyPath, trianglePath)
+                Path.combine(PathOperation.Union, bodyPath, cornerCurvePath)
             }
 
         }
