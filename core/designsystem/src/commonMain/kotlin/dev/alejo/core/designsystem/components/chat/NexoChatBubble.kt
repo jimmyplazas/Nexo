@@ -30,11 +30,11 @@ fun NexoChatBubble(
     messageContent: String,
     sender: String,
     formattedDateTime: String,
-    trianglePosition: TrianglePosition,
+    cornerCurvePosition: CornerCurvePosition,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.extended.surfaceHigher,
     messageStatus: @Composable (() -> Unit)? = null,
-    triangleSize: Dp = 16.dp,
+    cornerCurveSize: Dp = 16.dp,
     onLongClick: (() -> Unit)? = null
 ) {
     val padding = 12.dp
@@ -55,17 +55,17 @@ fun NexoChatBubble(
             )
             .clip(
                 ChatBubbleShape(
-                    curvePosition = trianglePosition,
-                    curveSize = triangleSize
+                    curvePosition = cornerCurvePosition,
+                    curveSize = cornerCurveSize
                 )
             )
             .background(color)
             .padding(
-                start = if (trianglePosition == TrianglePosition.LEFT) {
-                    padding + triangleSize
+                start = if (cornerCurvePosition == CornerCurvePosition.LEFT) {
+                    padding + cornerCurveSize
                 } else padding,
-                end = if (trianglePosition == TrianglePosition.RIGHT) {
-                    padding + triangleSize
+                end = if (cornerCurvePosition == CornerCurvePosition.RIGHT) {
+                    padding + cornerCurveSize
                 } else padding,
                 top = padding,
                 bottom = padding
@@ -108,7 +108,7 @@ fun NexoChatBubbleLeftPreview() {
             messageContent = "Hey, How are you?",
             sender = "Tú",
             formattedDateTime = "Friday 10:00 AM",
-            trianglePosition = TrianglePosition.LEFT,
+            cornerCurvePosition = CornerCurvePosition.LEFT,
         )
     }
 }
@@ -121,7 +121,7 @@ fun NexoChatBubbleRightPreview() {
             messageContent = "Hey, How are you?",
             sender = "Tú",
             formattedDateTime = "Friday 10:00 AM",
-            trianglePosition = TrianglePosition.RIGHT,
+            cornerCurvePosition = CornerCurvePosition.RIGHT,
         )
     }
 }
