@@ -39,7 +39,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Clock
 
 @Composable
-fun ChatListItem(
+fun ChatListItemUi(
     chat: ChatUi,
     isSelected: Boolean,
     modifier: Modifier = Modifier
@@ -145,7 +145,7 @@ fun ChatListItem(
 @Composable
 private fun ChatListItemUiPreview() {
     NexoTheme {
-        ChatListItem(
+        ChatListItemUi(
             chat = ChatUi(
                 id = "1",
                 localParticipant = ChatParticipantUi(
@@ -175,7 +175,7 @@ private fun ChatListItemUiPreview() {
 @Composable
 private fun ChatListItemUiDarkPreview() {
     NexoTheme(darkTheme = true) {
-        ChatListItem(
+        ChatListItemUi(
             chat = ChatUi(
                 id = "1",
                 localParticipant = ChatParticipantUi(
@@ -213,7 +213,7 @@ private fun ChatListItemUiDarkPreview() {
 @Composable
 private fun ChatListItemUiDarkManyPreview() {
     NexoTheme(darkTheme = true) {
-        ChatListItem(
+        ChatListItemUi(
             chat = ChatUi(
                 id = "1",
                 localParticipant = ChatParticipantUi(
@@ -261,7 +261,7 @@ private fun ChatListItemUiDarkManyPreview() {
 @Composable
 private fun ChatListItemUiDarkOneToOnePreview() {
     NexoTheme(darkTheme = true) {
-        ChatListItem(
+        ChatListItemUi(
             chat = ChatUi(
                 id = "1",
                 localParticipant = ChatParticipantUi(
