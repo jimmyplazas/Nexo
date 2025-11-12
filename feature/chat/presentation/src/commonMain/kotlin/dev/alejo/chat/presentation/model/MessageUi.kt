@@ -4,25 +4,25 @@ import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
 import dev.alejo.core.presentation.util.UiText
 
-sealed interface MessageUi {
+sealed class MessageUi(open val id: String) {
     data class LocalUserMessage(
-        val id: String,
+        override val id: String,
         val content: String,
         val deliveryStatus: ChatMessageDeliveryStatus,
         val canRetry: Boolean,
         val isMenuOpen: Boolean,
         val formattedSentTime: UiText
-    ) : MessageUi
+    ) : MessageUi(id = id)
 
     data class OtherUserMessage(
-        val id: String,
+        override val id: String,
         val content: String,
         val formattedSentTime: UiText,
         val sender: ChatParticipantUi
-    ) : MessageUi
+    ) : MessageUi(id = id)
 
     data class DateSeparator(
-        val id: String,
+        override val id: String,
         val date: UiText
-    ) : MessageUi
+    ) : MessageUi(id = id)
 }
