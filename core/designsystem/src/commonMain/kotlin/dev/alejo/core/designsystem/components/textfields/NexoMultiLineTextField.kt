@@ -63,7 +63,7 @@ fun NexoMultiLineTextField(
             onKeyboardAction = { onKeyboardActions() },
             cursorBrush = SolidColor(MaterialTheme.colorScheme.extended.textPrimary),
             decorator = { innerBox ->
-                if (placeholder != null && state.text.isNotEmpty()) {
+                if (placeholder != null && state.text.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = MaterialTheme.typography.bodyLarge,
