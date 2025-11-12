@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.chat_list.components.ChatListHeader
 import dev.alejo.chat.presentation.chat_list.components.ChatListItemUi
-import dev.alejo.chat.presentation.chat_list.components.EmptyChatSection
+import dev.alejo.chat.presentation.components.EmptyListSection
 import dev.alejo.chat.presentation.model.ChatUi
 import dev.alejo.core.designsystem.components.brand.NexoHorizontalDivider
 import dev.alejo.core.designsystem.components.buttons.NexoFloatingActionButton
@@ -40,6 +40,8 @@ import nexo.feature.chat.presentation.generated.resources.create_chat
 import nexo.feature.chat.presentation.generated.resources.do_you_want_to_logout
 import nexo.feature.chat.presentation.generated.resources.do_you_want_to_logout_desc
 import nexo.feature.chat.presentation.generated.resources.logout
+import nexo.feature.chat.presentation.generated.resources.no_chats
+import nexo.feature.chat.presentation.generated.resources.no_chats_description
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -127,7 +129,9 @@ fun ChatListScreen(
 
                 state.chats.isEmpty() -> {
                     if (state.chats.isEmpty() && !state.isLoading) {
-                        EmptyChatSection(
+                        EmptyListSection(
+                            title = stringResource(Res.string.no_chats),
+                            description = stringResource(Res.string.no_chats_description),
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(horizontal = 8.dp)
