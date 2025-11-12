@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
 import dev.alejo.chat.presentation.model.MessageUi
+import dev.alejo.chat.presentation.util.getChatBubbleColorForUser
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
@@ -51,6 +52,7 @@ fun MessageListItemUi(
             is MessageUi.OtherUserMessage -> {
                 OtherUserMessageUi(
                     message = messageUi,
+                    color = getChatBubbleColorForUser(messageUi.sender.id),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
