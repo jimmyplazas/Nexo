@@ -44,7 +44,7 @@ fun LocalUserMessageUi(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Box(
             modifier = Modifier.weight(1f)
