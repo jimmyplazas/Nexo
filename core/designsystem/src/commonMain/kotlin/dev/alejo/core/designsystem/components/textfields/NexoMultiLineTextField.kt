@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +36,7 @@ fun NexoMultiLineTextField(
     enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardActions: () -> Unit = {},
+    maxLinesInHeight: Int = 4,
     bottomContent: @Composable (RowScope.() -> Unit)? = null
 ) {
     Column(
@@ -53,11 +55,13 @@ fun NexoMultiLineTextField(
     ) {
         BasicTextField(
             state = state,
-            modifier = Modifier
-                .weight(1f),
             enabled = enabled,
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.extended.textPrimary
+            ),
+            lineLimits = TextFieldLineLimits.MultiLine(
+                minHeightInLines = 1,
+                maxHeightInLines = maxLinesInHeight
             ),
             keyboardOptions = keyboardOptions,
             onKeyboardAction = { onKeyboardActions() },
