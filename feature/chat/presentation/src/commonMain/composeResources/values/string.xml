@@ -18,7 +18,10 @@
     <string name="leave_chat">Leave chat</string>
     <string name="chat_members">Chat members</string>
     <string name="open_chat_options_menu">Open chat options</string>
+    <string name="no_chats">No Chats</string>
+    <string name="no_chats_description">Create new chat to start messaging</string>
     <string name="no_messages">No Messages</string>
+    <string name="no_messages_description">Be the first one to send a message!</string>
 
     <string name="offline">Offline</string>
     <string name="reconnecting">Reconnecting...</string>
@@ -26,7 +29,6 @@
     <string name="network_error">Network error</string>
     <string name="unknown_error">Unknown error</string>
 
-    <string name="no_messages_subtitle">Create new chat to start messaging</string>
     <string name="do_you_want_to_logout">Do you want to logout?</string>
     <string name="do_you_want_to_logout_desc">You will have to log in again to use the app</string>
     <string name="error_participant_not_found">No participant found</string>
