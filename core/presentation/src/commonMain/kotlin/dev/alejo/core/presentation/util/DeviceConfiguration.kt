@@ -50,6 +50,9 @@ enum class DeviceConfiguration {
     val isMobile: Boolean
         get() = this in listOf(MOBILE_PORTRAIT, MOBILE_LANDSCAPE)
 
+    val isWideScreen: Boolean
+        get() = this in listOf(TABLET_LANDSCAPE, DESKTOP)
+
     companion object {
         fun fromWindowSizeClass(windowSizeClass: WindowSizeClass): DeviceConfiguration {
             return with(windowSizeClass) {
