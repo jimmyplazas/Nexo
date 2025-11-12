@@ -1,4 +1,4 @@
-package dev.alejo.chat.presentation.chat_list.components
+package dev.alejo.chat.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,13 +17,12 @@ import dev.alejo.core.presentation.util.DeviceConfiguration
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
 import nexo.feature.chat.presentation.generated.resources.Res
 import nexo.feature.chat.presentation.generated.resources.empty_chat
-import nexo.feature.chat.presentation.generated.resources.no_messages
-import nexo.feature.chat.presentation.generated.resources.no_messages_subtitle
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun EmptyChatSection(
+fun EmptyListSection(
+    title: String,
+    description: String,
     modifier: Modifier = Modifier
 ) {
     val configuration = currentDeviceConfiguration()
@@ -35,7 +34,7 @@ fun EmptyChatSection(
     ) {
         Image(
             painter = painterResource(Res.drawable.empty_chat),
-            contentDescription = stringResource(Res.string.no_messages),
+            contentDescription = title,
             modifier = Modifier.size(
                 if (configuration == DeviceConfiguration.MOBILE_LANDSCAPE) {
                     125.dp
@@ -46,12 +45,12 @@ fun EmptyChatSection(
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = stringResource(Res.string.no_messages),
+            text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.extended.textPrimary
         )
         Text(
-            text = stringResource(Res.string.no_messages_subtitle),
+            text = description,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.extended.textSecondary
         )
