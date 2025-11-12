@@ -1,26 +1,22 @@
 package dev.alejo.chat.presentation.chat_list.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.alejo.chat.presentation.components.ChatHeader
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
 import dev.alejo.core.designsystem.components.avatar.NexoAvatarPhoto
-import dev.alejo.core.designsystem.components.brand.NexoHorizontalDivider
+import dev.alejo.core.designsystem.components.dropdowns.DropDownItem
+import dev.alejo.core.designsystem.components.dropdowns.NexoDropDownMenu
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
 import nexo.core.designsystem.generated.resources.log_out_icon
@@ -96,63 +92,26 @@ fun ProfileAvatarSection(
             )
         }
 
-        DropdownMenu(
-            expanded = isMenuOpen,
-            onDismissRequest = onDismissMenu,
-            containerColor = MaterialTheme.colorScheme.surface,
-            border = BorderStroke(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.extended.surfaceOutline
+        val dropDownMenuItems = listOf(
+            DropDownItem(
+                title = stringResource(Res.string.profile_settings),
+                onClick = onProfileSettingsClick,
+                icon = vectorResource(DesignSystemRes.drawable.settings_icon),
+                contentColor = MaterialTheme.colorScheme.extended.textSecondary
+            ),
+            DropDownItem(
+                title = stringResource(Res.string.logout),
+                onClick = onLogoutClick,
+                icon = vectorResource(DesignSystemRes.drawable.log_out_icon),
+                contentColor = MaterialTheme.colorScheme.extended.destructiveHover
             )
-        ) {
-            DropdownMenuItem(
-                text = {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        Icon(
-                            imageVector = vectorResource(DesignSystemRes.drawable.settings_icon),
-                            contentDescription = stringResource(Res.string.profile_settings),
-                            tint = MaterialTheme.colorScheme.extended.textSecondary,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Text(
-                            text = stringResource(Res.string.profile_settings),
-                            color = MaterialTheme.colorScheme.extended.textSecondary,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                },
-                onClick =  {
-                    onDismissMenu()
-                    onProfileSettingsClick()
-                }
-            )
-            NexoHorizontalDivider()
-            DropdownMenuItem(
-                text = {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        Icon(
-                            imageVector = vectorResource(DesignSystemRes.drawable.log_out_icon),
-                            contentDescription = stringResource(Res.string.logout),
-                            tint = MaterialTheme.colorScheme.extended.destructiveHover,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Text(
-                            text = stringResource(Res.string.logout),
-                            color = MaterialTheme.colorScheme.extended.destructiveHover,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                },
-                onClick =  {
-                    onDismissMenu()
-                    onLogoutClick()
-                }
-            )
-        }
+        )
+
+        NexoDropDownMenu(
+            isOpen = isMenuOpen,
+            items = dropDownMenuItems,
+            onDismiss = onDismissMenu
+        )
     }
 }
 
