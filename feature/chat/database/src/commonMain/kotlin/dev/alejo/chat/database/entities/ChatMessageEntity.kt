@@ -2,16 +2,21 @@ package dev.alejo.chat.database.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = ChatEntity::class,
             parentColumns = ["chatId"],
             childColumns = ["chatId"],
+            entity = ChatEntity::class,
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("chatId"),
+        Index("timestamp")
     ]
 )
 data class ChatMessageEntity(
