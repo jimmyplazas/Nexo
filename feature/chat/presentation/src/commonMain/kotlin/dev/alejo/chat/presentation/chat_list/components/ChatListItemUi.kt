@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import dev.alejo.chat.domain.models.ChatMessage
+import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
 import dev.alejo.chat.presentation.components.ChatItemHeaderRow
 import dev.alejo.chat.presentation.model.ChatUi
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
@@ -155,7 +156,8 @@ private fun ChatListItemUiDarkPreview() {
                     chatId = "2",
                     senderId = "2",
                     content = "Hey mate",
-                    createdAt = Clock.System.now()
+                    createdAt = Clock.System.now(),
+                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                 ),
                 lastMessageSenderUsername = "Pin"
             ),
@@ -203,7 +205,8 @@ private fun ChatListItemUiDarkManyPreview() {
                     chatId = "2",
                     senderId = "2",
                     content = "Hey mate",
-                    createdAt = Clock.System.now()
+                    createdAt = Clock.System.now(),
+                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                 ),
                 lastMessageSenderUsername = "Pin"
             ),
@@ -236,7 +239,8 @@ private fun ChatListItemUiDarkOneToOnePreview() {
                     chatId = "2",
                     senderId = "2",
                     content = "All good",
-                    createdAt = Clock.System.now()
+                    createdAt = Clock.System.now(),
+                    deliveryStatus = ChatMessageDeliveryStatus.SENT
                 ),
                 lastMessageSenderUsername = "Luz"
             ),
