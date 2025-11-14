@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class ChatListDetailViewModel : ViewModel() {
+class ChatListDetailViewModel() : ViewModel() {
 
     private val _state = MutableStateFlow(ChatListDetailState())
     val state = _state.asStateFlow()
