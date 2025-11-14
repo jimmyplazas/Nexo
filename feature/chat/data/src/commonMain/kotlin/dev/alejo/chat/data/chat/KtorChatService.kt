@@ -5,6 +5,7 @@ import dev.alejo.chat.data.dto.request.CreateChatRequest
 import dev.alejo.chat.data.mappers.toDomain
 import dev.alejo.chat.domain.chat.ChatService
 import dev.alejo.chat.domain.models.Chat
+import dev.alejo.core.data.networking.get
 import dev.alejo.core.data.networking.post
 import dev.alejo.core.domain.Result
 import dev.alejo.core.domain.map
@@ -23,5 +24,13 @@ class KtorChatService(
                 otherUserIds = otherUserIds
             )
         ).map { it.toDomain() }
+    }
+
+    override suspend fun getChats(): Result<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDtos ->
+            chatDtos.map { it.toDomain() }
+        }
     }
 }
