@@ -27,5 +27,5 @@ data class ChatMessageEntity(
     val content: String,
     val timestamp: Long,
     val deliveryStatus: String,
-    val deliveryStatusTimestamp: Long
+    val deliveryStatusTimestamp: Long = timestamp
 )
