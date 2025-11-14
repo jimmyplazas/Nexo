@@ -3,8 +3,10 @@ package dev.alejo.chat.data.di
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import dev.alejo.chat.data.chat.KtorChatParticipantService
 import dev.alejo.chat.data.chat.KtorChatService
+import dev.alejo.chat.data.chat.OfflineFirstChatRepository
 import dev.alejo.chat.database.DatabaseFactory
 import dev.alejo.chat.domain.chat.ChatParticipantService
+import dev.alejo.chat.domain.chat.ChatRepository
 import dev.alejo.chat.domain.chat.ChatService
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -23,4 +25,5 @@ val chatDataModule = module {
     }
     singleOf(::KtorChatParticipantService) bind ChatParticipantService::class
     singleOf(::KtorChatService) bind ChatService::class
+    singleOf(:: OfflineFirstChatRepository) bind ChatRepository::class
 }
