@@ -1,5 +1,6 @@
 package dev.alejo.chat.database
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import dev.alejo.chat.database.dao.ChatDao
@@ -24,6 +25,7 @@ import dev.alejo.chat.database.view.LastMessageView
     ],
     version = 1
 )
+@ConstructedBy(NexoChatDatabaseConstructor::class)
 abstract class NexoChatDatabase : RoomDatabase() {
     abstract val chatDao: ChatDao
     abstract val participantDao: ChatParticipantDao
