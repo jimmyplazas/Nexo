@@ -8,5 +8,5 @@ data class ChatParticipantEntity(
     @PrimaryKey
     val userId: String,
     val username: String,
-    val profilePictureUrl: String
+    val profilePictureUrl: String?
 )
