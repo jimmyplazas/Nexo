@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "32c0f10cbe6688b1bd48a54f3700ed61",
+    "identityHash": "00d90ce2ff5531c426879efc8446b66a",
     "entities": [
       {
         "tableName": "ChatEntity",
@@ -30,7 +30,7 @@
       },
       {
         "tableName": "ChatParticipantEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `username` TEXT NOT NULL, `profilePictureUrl` TEXT NOT NULL, PRIMARY KEY(`userId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `username` TEXT NOT NULL, `profilePictureUrl` TEXT, PRIMARY KEY(`userId`))",
         "fields": [
           {
             "fieldPath": "userId",
@@ -47,8 +47,7 @@
           {
             "fieldPath": "profilePictureUrl",
             "columnName": "profilePictureUrl",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -229,7 +228,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '32c0f10cbe6688b1bd48a54f3700ed61')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '00d90ce2ff5531c426879efc8446b66a')"
     ]
   }
 }
