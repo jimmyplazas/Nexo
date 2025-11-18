@@ -28,7 +28,7 @@ import dev.alejo.chat.database.view.LastMessageView
 @ConstructedBy(NexoChatDatabaseConstructor::class)
 abstract class NexoChatDatabase : RoomDatabase() {
     abstract val chatDao: ChatDao
-    abstract val participantDao: ChatParticipantDao
+    abstract val chatParticipantDao: ChatParticipantDao
     abstract val chatMessageDao: ChatMessageDao
     abstract val chatParticipantsCrossRefDao: ChatParticipantsCrossRefDao
 
