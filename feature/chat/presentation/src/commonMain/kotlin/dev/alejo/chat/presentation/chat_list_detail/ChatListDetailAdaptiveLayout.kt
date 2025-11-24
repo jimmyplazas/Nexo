@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.chat_detail.ChatDetailRoot
 import dev.alejo.chat.presentation.chat_list.ChatListRoot
 import dev.alejo.chat.presentation.create_chat.CreateChatRoot
+import dev.alejo.chat.presentation.manage_chat.ManageChatRoot
 import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.presentation.util.DialogSheetScopeViewModel
 import kotlinx.coroutines.launch
@@ -86,6 +87,9 @@ fun ChatListDetailAdaptiveLayout(
                 ChatDetailRoot(
                     chatId = sharedState.selectedChatId,
                     isDetailPresent = detailPane == PaneAdaptedValue.Expanded && listPane == PaneAdaptedValue.Expanded,
+                    onChatMembersClick = {
+                        chatListDetailViewModel.onAction(ChatListDetailAction.OnManageChatClick)
+                    },
                     onBack = {
                         scope.launch {
                             if (scaffoldNavigator.canNavigateBack()) {
@@ -111,6 +115,19 @@ fun ChatListDetailAdaptiveLayout(
                 scope.launch {
                     scaffoldNavigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
                 }
+            }
+        )
+    }
+
+    DialogSheetScopeViewModel(
+        visible = sharedState.dialogState is DialogState.ManageChat
+    ) {
+        ManageChatRoot(
+            onDismiss = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            },
+            onMembersAdded = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             }
         )
     }
