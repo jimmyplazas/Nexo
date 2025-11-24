@@ -14,7 +14,9 @@ data class ChatDetailState(
     val messageTextFieldState: TextFieldState = TextFieldState(),
     val canSendMessage: Boolean = false,
     val isPaginationLoading: Boolean = false,
+    val paginationError: UiText? = null,
     val endReached: Boolean = false,
+    val bannerState: BannerState = BannerState(),
     val isChatOptionsOpen: Boolean = false,
     val isNearBottom: Boolean = false,
     val connectionState: ConnectionState = ConnectionState.DISCONNECTED
