@@ -11,6 +11,7 @@
     <string name="sending">Sending</string>
     <string name="sent">Sent</string>
     <string name="failed">Failed</string>
+    <string name="save">Save</string>
     <string name="delete_for_everyone">Delete for everyone</string>
     <string name="retry">Retry</string>
     <string name="go_back">Go back</string>
