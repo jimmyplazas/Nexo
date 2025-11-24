@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.alejo.chat.domain.chat.ChatParticipantService
 import dev.alejo.chat.domain.chat.ChatRepository
+import dev.alejo.chat.presentation.components.manage_chat.ManageChatAction
+import dev.alejo.chat.presentation.components.manage_chat.ManageChatState
 import dev.alejo.chat.presentation.mappers.toUi
 import dev.alejo.core.domain.onFailure
 import dev.alejo.core.domain.onSuccess
@@ -39,7 +41,7 @@ class CreateChatViewModel(
     private val eventChannel = Channel<CreateChatEvent>()
     val events = eventChannel.receiveAsFlow()
 
-    private val _state = MutableStateFlow(CreateChatState())
+    private val _state = MutableStateFlow(ManageChatState())
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
@@ -50,7 +52,7 @@ class CreateChatViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = CreateChatState()
+            initialValue = ManageChatState()
         )
 
     private val searchFLow = snapshotFlow { _state.value.queryTextState.text.toString() }
@@ -59,10 +61,10 @@ class CreateChatViewModel(
             performSearch(query)
         }
 
-    fun onAction(action: CreateChatAction) {
+    fun onAction(action: ManageChatAction) {
         when (action) {
-            CreateChatAction.OnAddClick -> addParticipant()
-            CreateChatAction.OnCreateChatClick -> createChat()
+            ManageChatAction.OnAddClick -> addParticipant()
+            ManageChatAction.OnCreateChatClick -> createChat()
             else -> Unit
         }
     }
