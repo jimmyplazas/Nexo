@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
 import dev.alejo.core.designsystem.components.avatar.NexoAvatarPhoto
+import dev.alejo.core.designsystem.components.brand.NexoHorizontalDivider
 import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.designsystem.theme.titleXSmall
 import dev.alejo.core.presentation.util.DeviceConfiguration
@@ -27,6 +28,7 @@ import dev.alejo.core.presentation.util.currentDeviceConfiguration
 
 @Composable
 fun ColumnScope.ChatParticipantsSelectionSection(
+    existingParticipants: List<ChatParticipantUi>,
     selectedParticipants: List<ChatParticipantUi>,
     modifier: Modifier = Modifier,
     searchResult: ChatParticipantUi? = null,
@@ -53,6 +55,23 @@ fun ColumnScope.ChatParticipantsSelectionSection(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
+            items(
+                items = existingParticipants,
+                key = { "existing_${it.id}" }
+            ) { participant ->
+                ChatParticipantListItem(
+                    participantUi = participant,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+            }
+            if (existingParticipants.isNotEmpty()) {
+                item {
+                    NexoHorizontalDivider()
+                }
+            }
+
             searchResult?.let {
                 item {
                     ChatParticipantListItem(
