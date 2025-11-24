@@ -5,7 +5,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.alejo.chat.domain.chat.ChatParticipantService
-import dev.alejo.chat.domain.chat.ChatService
+import dev.alejo.chat.domain.chat.ChatRepository
 import dev.alejo.chat.presentation.mappers.toUi
 import dev.alejo.core.domain.onFailure
 import dev.alejo.core.domain.onSuccess
@@ -31,7 +31,7 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(FlowPreview::class)
 class CreateChatViewModel(
     private val chatParticipantService: ChatParticipantService,
-    private val chatService: ChatService
+    private val chatRepository: ChatRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -81,7 +81,7 @@ class CreateChatViewModel(
                 )
             }
 
-            chatService
+            chatRepository
                 .createChat(userIds)
                 .onSuccess { chat ->
                     _state.update {
