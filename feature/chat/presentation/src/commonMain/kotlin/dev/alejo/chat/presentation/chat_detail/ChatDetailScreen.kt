@@ -17,9 +17,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,6 +42,7 @@ import dev.alejo.chat.presentation.model.MessageUi
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
+import dev.alejo.core.presentation.util.ObserveAsEvents
 import dev.alejo.core.presentation.util.UiText
 import dev.alejo.core.presentation.util.clearFocusOnTap
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
@@ -54,12 +58,23 @@ fun ChatDetailRoot(
     chatId: String?,
     isDetailPresent: Boolean,
     onBack: () -> Unit,
+    onChatMembersClick: () -> Unit,
     viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
+    }
+
+    val snackbarState = remember { SnackbarHostState() }
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            ChatDetailEvent.OnChatLeft -> onBack()
+            is ChatDetailEvent.OnError -> {
+                snackbarState.showSnackbar(event.error.asStringAsync())
+            }
+        }
     }
 
     BackHandler(
@@ -72,7 +87,14 @@ fun ChatDetailRoot(
     ChatDetailScreen(
         state = state,
         isDetailPresent = isDetailPresent,
-        onAction = viewModel::onAction
+        snackbarState = snackbarState,
+        onAction = { action ->
+            when (action) {
+                ChatDetailAction.OnChatMembersCLick -> onChatMembersClick()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -80,6 +102,7 @@ fun ChatDetailRoot(
 fun ChatDetailScreen(
     state: ChatDetailState,
     isDetailPresent: Boolean,
+    snackbarState: SnackbarHostState,
     onAction: (ChatDetailAction) -> Unit,
 ) {
     val configuration = currentDeviceConfiguration()
@@ -93,6 +116,9 @@ fun ChatDetailScreen(
             MaterialTheme.colorScheme.surface
         } else {
             MaterialTheme.colorScheme.extended.surfaceLower
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarState)
         }
     ) { innerPadding ->
         Box(
@@ -218,6 +244,7 @@ private fun ChatDetailScreenEmptyPreview() {
         ChatDetailScreen(
             state = ChatDetailState(),
             isDetailPresent = false,
+            snackbarState = remember { SnackbarHostState() },
             onAction = {}
         )
     }
@@ -275,6 +302,7 @@ private fun ChatDetailScreenMessagesPreview() {
                 }.toList()
             ),
             isDetailPresent = true,
+            snackbarState = remember { SnackbarHostState() },
             onAction = {}
         )
     }
