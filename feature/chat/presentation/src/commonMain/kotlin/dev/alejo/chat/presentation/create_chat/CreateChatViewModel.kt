@@ -64,7 +64,7 @@ class CreateChatViewModel(
     fun onAction(action: ManageChatAction) {
         when (action) {
             ManageChatAction.OnAddClick -> addParticipant()
-            ManageChatAction.OnCreateChatClick -> createChat()
+            ManageChatAction.OnPrimaryActionClick -> createChat()
             else -> Unit
         }
     }
@@ -78,7 +78,7 @@ class CreateChatViewModel(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    isCreatingChat = true,
+                    isSubmitting = true,
                     canAddParticipant = false
                 )
             }
@@ -88,7 +88,7 @@ class CreateChatViewModel(
                 .onSuccess { chat ->
                     _state.update {
                         it.copy(
-                            isCreatingChat = false
+                            isSubmitting = false
                         )
                     }
                     eventChannel.send(CreateChatEvent.OnChatCreated(chat))
@@ -96,8 +96,8 @@ class CreateChatViewModel(
                 .onFailure { error ->
                     _state.update {
                         it.copy(
-                            createChatError = error.toUiText(),
-                            isCreatingChat = false,
+                            submitError = error.toUiText(),
+                            isSubmitting = false,
                             canAddParticipant = it.currentSearchResult != null && !it.isSearching
                         )
                     }
