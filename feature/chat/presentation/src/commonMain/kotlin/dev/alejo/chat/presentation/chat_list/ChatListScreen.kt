@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.chat_list.components.ChatListHeader
 import dev.alejo.chat.presentation.chat_list.components.ChatListItemUi
-import dev.alejo.chat.presentation.components.EmptyListSection
+import dev.alejo.chat.presentation.components.EmptySection
 import dev.alejo.chat.presentation.model.ChatUi
 import dev.alejo.core.designsystem.components.brand.NexoHorizontalDivider
 import dev.alejo.core.designsystem.components.buttons.NexoFloatingActionButton
@@ -129,7 +129,7 @@ fun ChatListScreen(
 
                 state.chats.isEmpty() -> {
                     if (state.chats.isEmpty() && !state.isLoading) {
-                        EmptyListSection(
+                        EmptySection(
                             title = stringResource(Res.string.no_chats),
                             description = stringResource(Res.string.no_chats_description),
                             modifier = Modifier
