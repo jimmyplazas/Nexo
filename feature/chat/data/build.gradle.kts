@@ -30,6 +30,7 @@ kotlin {
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
                 implementation(libs.koin.android)
+                implementation(libs.androidx.lifecycle.process)
             }
         }
 
