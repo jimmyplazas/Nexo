@@ -20,7 +20,7 @@ import nexo.feature.chat.presentation.generated.resources.empty_chat
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun EmptyListSection(
+fun EmptySection(
     title: String,
     description: String,
     modifier: Modifier = Modifier
