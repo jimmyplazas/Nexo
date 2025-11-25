@@ -96,9 +96,9 @@ fun ManageChatScreen(
             primaryButton = {
                 NexoButton(
                     text = primaryButtonText,
-                    onClick = { onAction(ManageChatAction.OnCreateChatClick) },
+                    onClick = { onAction(ManageChatAction.OnPrimaryActionClick) },
                     enabled = state.selectedChatParticipants.isNotEmpty(),
-                    isLoading = state.isCreatingChat
+                    isLoading = state.isSubmitting
                 )
             },
             secondaryButton = {
@@ -108,7 +108,7 @@ fun ManageChatScreen(
                     onClick = { onAction(ManageChatAction.OnDismissDialog) }
                 )
             },
-            error = state.createChatError?.asString(),
+            error = state.submitError?.asString(),
             modifier = Modifier.fillMaxWidth()
         )
     }
