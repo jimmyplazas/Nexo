@@ -11,6 +11,7 @@ import dev.alejo.chat.domain.chat.ChatRepository
 import dev.alejo.chat.domain.chat.ChatService
 import dev.alejo.chat.domain.models.Chat
 import dev.alejo.chat.domain.models.ChatInfo
+import dev.alejo.chat.domain.models.ChatParticipant
 import dev.alejo.core.domain.EmptyResult
 import dev.alejo.core.domain.Result
 import dev.alejo.core.domain.asEmptyResult
@@ -67,6 +68,13 @@ class OfflineFirstChatRepository(
             .map { it.toDomain() }
     }
 
+    override fun getActiveParticipantsByChatId(chatId: String): Flow<List<ChatParticipant>> {
+        return db.chatDao.getActiveParticipantsByChatId(chatId)
+            .map { participants ->
+                participants.map { it.toDomain() }
+            }
+    }
+
     override suspend fun fetchChats(): Result<List<Chat>, DataError.Remote> {
         return chatService.getChats()
             .onSuccess { chats ->
@@ -121,6 +129,22 @@ class OfflineFirstChatRepository(
             .leaveCHat(chatId)
             .onSuccess {
                 db.chatDao.deleteChatById(chatId)
+            }
+    }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>
+    ): Result<Chat, DataError.Remote> {
+        return chatService
+            .addParticipantsToChat(chatId, userIds)
+            .onSuccess { chat ->
+                db.chatDao.upsertChatWithParticipantsAndCrossRefs(
+                    chat = chat.toEntity(),
+                    participants = chat.participants.map { it.toEntity() },
+                    participantDao = db.chatParticipantDao,
+                    crossRefDao = db.chatParticipantsCrossRefDao
+                )
             }
     }
 
