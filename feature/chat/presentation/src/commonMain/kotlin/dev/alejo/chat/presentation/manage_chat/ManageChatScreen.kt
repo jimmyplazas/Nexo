@@ -1,6 +1,7 @@
 package dev.alejo.chat.presentation.manage_chat
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.components.manage_chat.ManageChatAction
@@ -18,10 +19,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ManageChatRoot(
+    chatId: String?,
     onDismiss: () -> Unit,
     onMembersAdded: () -> Unit,
     viewModel: ManageChatViewModel = koinViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -29,7 +32,9 @@ fun ManageChatRoot(
         }
     }
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(chatId) {
+        viewModel.onAction(ManageChatAction.ChatParticipants.OnSelectChat(chatId))
+    }
 
     NexoAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
