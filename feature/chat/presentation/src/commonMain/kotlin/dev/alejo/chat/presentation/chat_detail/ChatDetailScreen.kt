@@ -37,6 +37,7 @@ import dev.alejo.chat.presentation.chat_detail.components.ChatDetailHeader
 import dev.alejo.chat.presentation.chat_detail.components.MessageBox
 import dev.alejo.chat.presentation.chat_detail.components.MessageList
 import dev.alejo.chat.presentation.components.ChatHeader
+import dev.alejo.chat.presentation.components.EmptySection
 import dev.alejo.chat.presentation.model.ChatUi
 import dev.alejo.chat.presentation.model.MessageUi
 import dev.alejo.core.designsystem.components.avatar.ChatParticipantUi
@@ -46,6 +47,10 @@ import dev.alejo.core.presentation.util.ObserveAsEvents
 import dev.alejo.core.presentation.util.UiText
 import dev.alejo.core.presentation.util.clearFocusOnTap
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
+import nexo.feature.chat.presentation.generated.resources.Res
+import nexo.feature.chat.presentation.generated.resources.no_chat_selected
+import nexo.feature.chat.presentation.generated.resources.select_a_chat
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
@@ -139,53 +144,61 @@ fun ChatDetailScreen(
                     modifier = Modifier.weight(1f)
                         .fillMaxWidth()
                 ) {
-                    ChatHeader {
-                        ChatDetailHeader(
-                            chatUi = state.chatUi,
-                            isDetailPresent = isDetailPresent,
-                            isChatOptionsDropDownOpen = state.isChatOptionsOpen,
-                            onChatOptionsClick = { onAction(ChatDetailAction.OnChatOptionsCLick) },
-                            onDismissChatOptions = { onAction(ChatDetailAction.OnDismissChatOptions) },
-                            onManageChatClick = { onAction(ChatDetailAction.OnChatMembersCLick) },
-                            onLeaveChatClick = { onAction(ChatDetailAction.OnLeaveChatCLick) },
-                            onBackClick = { onAction(ChatDetailAction.OnBackCLick) },
-                            modifier = Modifier.fillMaxWidth()
+                    if (state.chatUi == null) {
+                        EmptySection(
+                            title = stringResource(Res.string.no_chat_selected),
+                            description = stringResource(Res.string.select_a_chat),
+                                modifier = Modifier.fillMaxSize()
                         )
-                    }
-                    MessageList(
-                        messages = state.messages,
-                        listState = messageListState,
-                        onMessageLongClick = { message ->
-                            onAction(ChatDetailAction.OnMessageLongClick(message))
-                        },
-                        onMessageRetryClick = { message ->
-                            onAction(ChatDetailAction.OnRetryClick(message))
-                        },
-                        onDismissMessageMenu = {
-                            onAction(ChatDetailAction.OnDismissMessageMenu)
-                        },
-                        onDeleteMessageClick = { message ->
-                            onAction(ChatDetailAction.OnDeleteMessageClick(message))
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    )
-
-                    AnimatedVisibility(
-                        visible = !configuration.isWideScreen && state.chatUi != null
-                    ) {
-                        MessageBox(
-                            messageTextFieldState = state.messageTextFieldState,
-                            isTextInputEnabled = state.canSendMessage,
-                            connectionState = state.connectionState,
-                            onSendClick = {
-                                onAction(ChatDetailAction.OnSendMessageClick)
+                    } else {
+                        ChatHeader {
+                            ChatDetailHeader(
+                                chatUi = state.chatUi,
+                                isDetailPresent = isDetailPresent,
+                                isChatOptionsDropDownOpen = state.isChatOptionsOpen,
+                                onChatOptionsClick = { onAction(ChatDetailAction.OnChatOptionsCLick) },
+                                onDismissChatOptions = { onAction(ChatDetailAction.OnDismissChatOptions) },
+                                onManageChatClick = { onAction(ChatDetailAction.OnChatMembersCLick) },
+                                onLeaveChatClick = { onAction(ChatDetailAction.OnLeaveChatCLick) },
+                                onBackClick = { onAction(ChatDetailAction.OnBackCLick) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        MessageList(
+                            messages = state.messages,
+                            listState = messageListState,
+                            onMessageLongClick = { message ->
+                                onAction(ChatDetailAction.OnMessageLongClick(message))
                             },
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(vertical = 8.dp, horizontal = 16.dp)
+                            onMessageRetryClick = { message ->
+                                onAction(ChatDetailAction.OnRetryClick(message))
+                            },
+                            onDismissMessageMenu = {
+                                onAction(ChatDetailAction.OnDismissMessageMenu)
+                            },
+                            onDeleteMessageClick = { message ->
+                                onAction(ChatDetailAction.OnDeleteMessageClick(message))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
                         )
+                        AnimatedVisibility(
+                            visible = !configuration.isWideScreen
+                        ) {
+                            MessageBox(
+                                messageTextFieldState = state.messageTextFieldState,
+                                isTextInputEnabled = state.canSendMessage,
+                                connectionState = state.connectionState,
+                                onSendClick = {
+                                    onAction(ChatDetailAction.OnSendMessageClick)
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                            )
+                        }
                     }
+
                 }
 
                 if (configuration.isWideScreen) {
