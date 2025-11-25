@@ -2,6 +2,7 @@ package dev.alejo.chat.data.chat
 
 import dev.alejo.chat.data.dto.ChatDto
 import dev.alejo.chat.data.dto.request.CreateChatRequest
+import dev.alejo.chat.data.dto.request.ParticipantsRequest
 import dev.alejo.chat.data.mappers.toDomain
 import dev.alejo.chat.domain.chat.ChatService
 import dev.alejo.chat.domain.models.Chat
@@ -47,5 +48,17 @@ class KtorChatService(
         return httpClient.delete<Unit>(
             route = "/chat/$chatId/leave"
         ).asEmptyResult()
+    }
+
+    override suspend fun addParticipantsToChat(
+        chatId: String,
+        userIds: List<String>
+    ): Result<Chat, DataError.Remote> {
+        return httpClient.post<ParticipantsRequest, ChatDto>(
+            route = "/chat/$chatId/add",
+            body = ParticipantsRequest(
+                userIds = userIds
+            )
+        ).map { it.toDomain() }
     }
 }
