@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
-import dev.alejo.chat.presentation.components.EmptyListSection
+import dev.alejo.chat.presentation.components.EmptySection
 import dev.alejo.chat.presentation.model.MessageUi
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.presentation.util.UiText
@@ -42,7 +42,7 @@ fun MessageList(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            EmptyListSection(
+            EmptySection(
                 title = stringResource(Res.string.no_messages),
                 description = stringResource(Res.string.no_messages_description),
                 modifier = Modifier.fillMaxSize()
