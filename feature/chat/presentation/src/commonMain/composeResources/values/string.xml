@@ -24,6 +24,9 @@
     <string name="no_messages">No Messages</string>
     <string name="no_messages_description">Be the first one to send a message!</string>
 
+    <string name="no_chat_selected">No chat selected</string>
+    <string name="select_a_chat">Select a chat to start messaging</string>
+
     <string name="offline">Offline</string>
     <string name="reconnecting">Reconnecting...</string>
     <string name="online">Online</string>
