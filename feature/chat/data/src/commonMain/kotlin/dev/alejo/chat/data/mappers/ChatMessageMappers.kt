@@ -1,6 +1,8 @@
 package dev.alejo.chat.data.mappers
 
 import dev.alejo.chat.data.dto.ChatMessageDto
+import dev.alejo.chat.data.dto.websocket.IncomingWebSocketDto
+import dev.alejo.chat.data.dto.websocket.OutgoingWebSocketDto
 import dev.alejo.chat.database.entities.ChatMessageEntity
 import dev.alejo.chat.database.view.LastMessageView
 import dev.alejo.chat.domain.models.ChatMessage
@@ -70,5 +72,24 @@ fun LastMessageView.toEntity(): ChatMessageEntity {
         timestamp = timestamp,
         senderId = senderId,
         deliveryStatus = deliveryStatus,
+    )
+}
+
+fun ChatMessage.toNewMessage(): OutgoingWebSocketDto.NewMessage {
+    return OutgoingWebSocketDto.NewMessage(
+        messageId = id,
+        chatId = chatId,
+        content = content
+    )
+}
+
+fun IncomingWebSocketDto.NewMessageDto.toEntity(): ChatMessageEntity {
+    return ChatMessageEntity(
+        messageId = id,
+        chatId = chatId,
+        senderId = senderId,
+        content = content,
+        timestamp = Instant.parse(createdAt).toEpochMilliseconds(),
+        deliveryStatus = ChatMessageDeliveryStatus.SENT.name
     )
 }
