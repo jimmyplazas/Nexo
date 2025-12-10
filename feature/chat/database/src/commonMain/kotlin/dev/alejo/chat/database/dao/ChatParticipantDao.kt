@@ -14,6 +14,13 @@ interface ChatParticipantDao {
     @Upsert
     suspend fun upsertChatParticipants(participants: List<ChatParticipantEntity>)
 
+    @Query("""
+        UPDATE chatparticipantentity
+        SET profilePictureUrl = :newUrl
+        WHERE userId = :userId
+    """)
+    suspend fun updateProfilePictureUrl(userId: String, newUrl: String?)
+
     @Query("SELECT * FROM chatparticipantentity")
     suspend fun getAllParticipants(): List<ChatParticipantEntity>
 
