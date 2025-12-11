@@ -44,11 +44,9 @@ fun LocalUserMessageUi(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(2.dp)
+        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.End)
     ) {
-        Box(
-            modifier = Modifier.weight(1f)
-        ) {
+        Box {
             NexoChatBubble(
                 messageContent = message.content,
                 sender = stringResource(Res.string.you),
