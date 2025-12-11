@@ -74,7 +74,7 @@ fun NexoMultiLineTextField(
                         color = MaterialTheme.colorScheme.extended.textPlaceholder,
                     )
                 }
-                innerBox
+                innerBox()
             }
         )
 
