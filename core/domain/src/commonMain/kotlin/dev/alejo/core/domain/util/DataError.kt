@@ -33,4 +33,9 @@ sealed interface DataError : Error {
         NOT_FOUND,
         UNKNOWN
     }
+
+    enum class Connection : DataError {
+        NOT_CONNECTED,
+        MESSAGE_SEND_FAILED
+    }
 }
