@@ -7,6 +7,8 @@ import dev.alejo.chat.database.entities.ChatMessageEntity
 import dev.alejo.chat.database.view.LastMessageView
 import dev.alejo.chat.domain.models.ChatMessage
 import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
+import dev.alejo.chat.domain.models.OutgoingNewMessage
+import kotlin.time.Clock
 import kotlin.time.Instant
 
 fun ChatMessageDto.toDomain(): ChatMessage {
@@ -91,5 +93,27 @@ fun IncomingWebSocketDto.NewMessageDto.toEntity(): ChatMessageEntity {
         content = content,
         timestamp = Instant.parse(createdAt).toEpochMilliseconds(),
         deliveryStatus = ChatMessageDeliveryStatus.SENT.name
+    )
+}
+
+fun OutgoingNewMessage.toWebSocketDto(): OutgoingWebSocketDto.NewMessage {
+    return OutgoingWebSocketDto.NewMessage(
+        chatId = chatId,
+        messageId = messageId,
+        content = content
+    )
+}
+
+fun OutgoingWebSocketDto.NewMessage.toEntity(
+    senderId: String,
+    deliveryStatus: ChatMessageDeliveryStatus
+): ChatMessageEntity {
+    return ChatMessageEntity(
+        messageId = messageId,
+        chatId = chatId,
+        content = content,
+        senderId = senderId,
+        deliveryStatus = deliveryStatus.name,
+        timestamp = Clock.System.now().toEpochMilliseconds()
     )
 }
