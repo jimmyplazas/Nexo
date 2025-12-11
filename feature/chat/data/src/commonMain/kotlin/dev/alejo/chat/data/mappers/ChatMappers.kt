@@ -7,7 +7,6 @@ import dev.alejo.chat.database.entities.ChatWithParticipants
 import dev.alejo.chat.database.entities.MessageWithSender
 import dev.alejo.chat.domain.models.Chat
 import dev.alejo.chat.domain.models.ChatInfo
-import dev.alejo.chat.domain.models.ChatMessage
 import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
 import dev.alejo.chat.domain.models.ChatParticipant
 import kotlin.time.Instant
@@ -25,7 +24,7 @@ fun ChatDto.toDomain(): Chat {
 }
 fun ChatEntity.toDomain(
     participants: List<ChatParticipant>,
-    lastMessage: ChatMessage? = null
+    lastMessage: dev.alejo.chat.domain.models.ChatMessage? = null
 ): Chat {
     return Chat(
         id = chatId,
