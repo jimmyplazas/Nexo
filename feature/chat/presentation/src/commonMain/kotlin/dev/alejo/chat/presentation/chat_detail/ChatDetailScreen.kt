@@ -79,6 +79,8 @@ fun ChatDetailRoot(
             is ChatDetailEvent.OnError -> {
                 snackbarState.showSnackbar(event.error.asStringAsync())
             }
+
+            ChatDetailEvent.OnNewMessage -> TODO()
         }
     }
 
@@ -298,7 +300,6 @@ private fun ChatDetailScreenMessagesPreview() {
                             deliveryStatus = ChatMessageDeliveryStatus.SENT,
                             isMenuOpen = false,
                             formattedSentTime = UiText.DynamicString("Friday 10:00 PM"),
-                            canRetry = false
                         )
                     } else {
                         MessageUi.OtherUserMessage(
