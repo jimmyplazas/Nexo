@@ -32,7 +32,7 @@ class ChatListDetailViewModel(
 
     fun onAction(action: ChatListDetailAction) {
         when (action) {
-            is ChatListDetailAction.OnChatClick -> {
+            is ChatListDetailAction.OnSelectChat -> {
                 _state.update {
                     it.copy(
                         selectedChatId = action.chatId
