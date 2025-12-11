@@ -4,13 +4,13 @@ package dev.alejo.chat.data.network
 
 import dev.alejo.chat.data.dto.websocket.WebSocketMessageDto
 import dev.alejo.chat.data.lifecycle.AppLifecycleObserver
-import dev.alejo.chat.domain.error.ConnectionError
 import dev.alejo.chat.domain.models.ConnectionState
 import dev.alejo.core.data.networking.UrlConstants
 import dev.alejo.core.domain.EmptyResult
 import dev.alejo.core.domain.Result
 import dev.alejo.core.domain.auth.SessionStorage
 import dev.alejo.core.domain.logging.NexoLogger
+import dev.alejo.core.domain.util.DataError
 import dev.alejo.feature.chat.data.BuildKonfig
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
@@ -216,11 +216,11 @@ class KtorWebSocketConnector(
         }
     }
 
-    suspend fun sendMessage(message: String): EmptyResult<ConnectionError> {
+    suspend fun sendMessage(message: String): EmptyResult<DataError.Connection> {
         val connectionState = connectionState.value
 
         if (currentSession == null || connectionState != ConnectionState.CONNECTED) {
-            return Result.Failure(ConnectionError.NOT_CONNECTED)
+            return Result.Failure(DataError.Connection.NOT_CONNECTED)
         }
 
         return try {
@@ -229,7 +229,7 @@ class KtorWebSocketConnector(
         } catch (e: Exception) {
             coroutineContext.ensureActive()
             logger.error("Unable to send WebSocket message", e)
-            Result.Failure(ConnectionError.MESSAGE_SEND_FAILED)
+            Result.Failure(DataError.Connection.MESSAGE_SEND_FAILED)
         }
     }
 }
