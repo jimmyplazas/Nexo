@@ -61,8 +61,6 @@ class ChatDetailViewModel(
     private val canSendMessage = snapshotFlow { _state.value.messageTextFieldState.text.toString() }
         .map { it.isBlank() }
         .combine(connectionClient.connectionState) { isMessageBlank, connectionState ->
-            println("=== MessageBlank $isMessageBlank")
-            println("=== ConnectionState $connectionState")
             !isMessageBlank && connectionState == ConnectionState.CONNECTED
         }
 
