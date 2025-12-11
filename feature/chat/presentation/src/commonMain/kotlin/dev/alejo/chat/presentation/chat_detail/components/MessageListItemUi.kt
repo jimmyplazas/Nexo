@@ -107,7 +107,6 @@ fun MessageListItemUiLocalUserMessagePreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                canRetry = false,
                 isMenuOpen = true,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
