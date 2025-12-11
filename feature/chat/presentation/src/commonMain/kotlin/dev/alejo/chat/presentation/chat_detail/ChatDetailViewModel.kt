@@ -1,14 +1,16 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalUuidApi::class)
 
 package dev.alejo.chat.presentation.chat_detail
 
 import androidx.compose.foundation.text.input.clearText
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.alejo.chat.domain.chat.ChatConnectionClient
 import dev.alejo.chat.domain.chat.ChatRepository
 import dev.alejo.chat.domain.message.MessageRepository
 import dev.alejo.chat.domain.models.ConnectionState
+import dev.alejo.chat.domain.models.OutgoingNewMessage
 import dev.alejo.chat.presentation.mappers.toUi
 import dev.alejo.core.domain.auth.SessionStorage
 import dev.alejo.core.domain.onFailure
@@ -30,6 +32,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class ChatDetailViewModel(
     private val chatRepository: ChatRepository,
@@ -54,6 +58,14 @@ class ChatDetailViewModel(
 
     private val _state = MutableStateFlow(ChatDetailState())
 
+    private val canSendMessage = snapshotFlow { _state.value.messageTextFieldState.text.toString() }
+        .map { it.isBlank() }
+        .combine(connectionClient.connectionState) { isMessageBlank, connectionState ->
+            println("=== MessageBlank $isMessageBlank")
+            println("=== ConnectionState $connectionState")
+            !isMessageBlank && connectionState == ConnectionState.CONNECTED
+        }
+
     private val stateWithMessages = combine(
         _state,
         chatInfoFlow,
@@ -77,6 +89,7 @@ class ChatDetailViewModel(
             if (!hasLoadedInitialData) {
                 observeConnectionState()
                 observeChatMessages()
+                observeCanSendMessage()
                 hasLoadedInitialData = true
             }
         }
@@ -99,7 +112,42 @@ class ChatDetailViewModel(
             is ChatDetailAction.OnMessageLongClick -> {}
             is ChatDetailAction.OnRetryClick -> {}
             ChatDetailAction.OnScrollToTop -> {}
-            ChatDetailAction.OnSendMessageClick -> {}
+            ChatDetailAction.OnSendMessageClick -> sendMessage()
+        }
+    }
+
+    private fun observeCanSendMessage() {
+        canSendMessage.onEach { canSend ->
+            _state.update {
+                it.copy(
+                    canSendMessage = canSend
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun sendMessage() {
+        val currentChatId = _chatId.value
+        val content = state.value.messageTextFieldState.text.toString().trim()
+        if (content.isBlank() || currentChatId == null) {
+            return
+        }
+
+        viewModelScope.launch {
+            val message = OutgoingNewMessage(
+                chatId = currentChatId,
+                messageId =  Uuid.random().toString(),
+                content = content
+            )
+
+            messageRepository
+                .sendMessage(message)
+                .onSuccess {
+                    state.value.messageTextFieldState.clearText()
+                }
+                .onFailure { error ->
+                    _events.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
         }
     }
 
