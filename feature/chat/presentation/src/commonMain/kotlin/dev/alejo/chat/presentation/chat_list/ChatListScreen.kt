@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,7 +29,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.chat_list.components.ChatListHeader
 import dev.alejo.chat.presentation.chat_list.components.ChatListItemUi
 import dev.alejo.chat.presentation.components.EmptySection
-import dev.alejo.chat.presentation.model.ChatUi
 import dev.alejo.core.designsystem.components.brand.NexoHorizontalDivider
 import dev.alejo.core.designsystem.components.buttons.NexoFloatingActionButton
 import dev.alejo.core.designsystem.components.dialogs.DestructiveConfirmationDialog
@@ -48,20 +48,25 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChatListRoot(
-    viewModel: ChatListViewModel = koinViewModel(),
-    onChatClick: (ChatUi) -> Unit,
+    selectedSChatId: String?,
+    onChatClick: (String?) -> Unit,
     onConfirmLogoutCLick: () -> Unit,
     onCreateChatCLick: () -> Unit,
-    onProfileSettingsCLick: () -> Unit
+    onProfileSettingsCLick: () -> Unit,
+    viewModel: ChatListViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(selectedSChatId) {
+        viewModel.onAction(ChatListAction.OnSelectChat(selectedSChatId))
+    }
 
     ChatListScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                is ChatListAction.OnChatClick -> onChatClick(action.chat)
+                is ChatListAction.OnSelectChat -> onChatClick(action.chatId)
                 ChatListAction.OnConfirmLogout -> onConfirmLogoutCLick()
                 ChatListAction.OnCreateChatCLick -> onCreateChatCLick()
                 ChatListAction.OnProfileSettingsCLick -> onProfileSettingsCLick()
@@ -154,7 +159,7 @@ fun ChatListScreen(
                                 isSelected = chatUi.id == state.selectedChatId,
                                 modifier = Modifier.fillMaxWidth()
                                     .clickable {
-                                        onAction(ChatListAction.OnChatClick(chatUi))
+                                        onAction(ChatListAction.OnSelectChat(chatUi.id))
                                     }
                             )
                             NexoHorizontalDivider()
