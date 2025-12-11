@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -47,6 +48,8 @@ import dev.alejo.core.presentation.util.ObserveAsEvents
 import dev.alejo.core.presentation.util.UiText
 import dev.alejo.core.presentation.util.clearFocusOnTap
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import nexo.feature.chat.presentation.generated.resources.Res
 import nexo.feature.chat.presentation.generated.resources.no_chat_selected
 import nexo.feature.chat.presentation.generated.resources.select_a_chat
@@ -84,10 +87,16 @@ fun ChatDetailRoot(
         }
     }
 
+    val scope = rememberCoroutineScope()
     BackHandler(
         enabled = !isDetailPresent
     ) {
-        viewModel.onAction(ChatDetailAction.OnBackCLick)
+        // Add artificial delay to prevent detail back animation from showing
+        // an unselected chat the moment we go back
+        scope.launch {
+            delay(300)
+            viewModel.onAction(ChatDetailAction.OnBackCLick)
+        }
         onBack()
     }
 
@@ -150,7 +159,7 @@ fun ChatDetailScreen(
                         EmptySection(
                             title = stringResource(Res.string.no_chat_selected),
                             description = stringResource(Res.string.select_a_chat),
-                                modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize()
                         )
                     } else {
                         ChatHeader {
