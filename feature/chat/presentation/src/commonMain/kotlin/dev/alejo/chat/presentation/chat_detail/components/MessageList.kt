@@ -85,7 +85,6 @@ fun MessageListPreview() {
                     id = "1",
                     content = "Hey mate!",
                     deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                    canRetry = false,
                     isMenuOpen = false,
                     formattedSentTime = UiText.DynamicString("10:00 AM")
                 )
