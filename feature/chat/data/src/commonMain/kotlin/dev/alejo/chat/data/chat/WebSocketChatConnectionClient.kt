@@ -5,19 +5,13 @@ import dev.alejo.chat.data.dto.websocket.IncomingWebSocketType
 import dev.alejo.chat.data.dto.websocket.WebSocketMessageDto
 import dev.alejo.chat.data.mappers.toDomain
 import dev.alejo.chat.data.mappers.toEntity
-import dev.alejo.chat.data.mappers.toNewMessage
 import dev.alejo.chat.data.network.KtorWebSocketConnector
 import dev.alejo.chat.database.NexoChatDatabase
 import dev.alejo.chat.domain.chat.ChatConnectionClient
 import dev.alejo.chat.domain.chat.ChatRepository
-import dev.alejo.chat.domain.error.ConnectionError
-import dev.alejo.chat.domain.message.MessageRepository
 import dev.alejo.chat.domain.models.ChatMessage
-import dev.alejo.chat.domain.models.ChatMessageDeliveryStatus
 import dev.alejo.chat.domain.models.ConnectionState
-import dev.alejo.core.domain.EmptyResult
 import dev.alejo.core.domain.auth.SessionStorage
-import dev.alejo.core.domain.onFailure
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +29,6 @@ class WebSocketChatConnectionClient(
     private val database: NexoChatDatabase,
     private val sessionStorage: SessionStorage,
     private val json: Json,
-    private val messageRepository: MessageRepository,
     private val applicationScope: CoroutineScope
 ) : ChatConnectionClient {
 
@@ -53,25 +46,6 @@ class WebSocketChatConnectionClient(
         )
 
     override val connectionState: StateFlow<ConnectionState> = webSocketConnector.connectionState
-
-    override suspend fun sendChatMessage(message: ChatMessage): EmptyResult<ConnectionError> {
-        val outgoingDto = message.toNewMessage()
-        val webSocketMessage = WebSocketMessageDto(
-            type = outgoingDto.type.name,
-            payload = json.encodeToString(outgoingDto)
-        )
-
-        val rawJsonPayload = json.encodeToString(webSocketMessage)
-
-        return webSocketConnector
-            .sendMessage(rawJsonPayload)
-            .onFailure { error ->
-                messageRepository.updateMessageDeliveryStatus(
-                    messageId = message.id,
-                    status = ChatMessageDeliveryStatus.FAILED
-                )
-            }
-    }
 
     private fun parseIncomingMessage(message: WebSocketMessageDto): IncomingWebSocketDto? {
         return when (message.type) {
