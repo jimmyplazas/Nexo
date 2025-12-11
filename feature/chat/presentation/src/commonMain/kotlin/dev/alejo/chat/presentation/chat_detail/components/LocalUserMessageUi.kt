@@ -101,7 +101,6 @@ fun LocalUserMessageUiFailedPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.FAILED,
-                canRetry = false,
                 isMenuOpen = false,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
@@ -122,7 +121,6 @@ fun LocalUserMessageUiFailedRetryPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                canRetry = true,
                 isMenuOpen = true,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
@@ -143,7 +141,6 @@ fun LocalUserMessageUiSentPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                canRetry = false,
                 isMenuOpen = false,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
@@ -164,7 +161,6 @@ fun LocalUserMessageUiSendingPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENDING,
-                canRetry = false,
                 isMenuOpen = false,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
