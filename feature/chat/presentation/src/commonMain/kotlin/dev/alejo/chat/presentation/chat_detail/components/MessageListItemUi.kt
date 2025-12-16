@@ -23,11 +23,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MessageListItemUi(
     messageUi: MessageUi,
-    modifier: Modifier = Modifier,
+    messageWithOpenMenu: MessageUi.LocalUserMessage?,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: (MessageUi.LocalUserMessage) -> Unit,
-    onRetryClick: (MessageUi.LocalUserMessage) -> Unit
+    onRetryClick: (MessageUi.LocalUserMessage) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
@@ -42,6 +43,7 @@ fun MessageListItemUi(
             is MessageUi.LocalUserMessage -> {
                 LocalUserMessageUi(
                     message = messageUi,
+                    messageWithOpenMenu = messageWithOpenMenu,
                     modifier = Modifier.fillMaxWidth(),
                     onMessageLongClick = { onMessageLongClick(messageUi) },
                     onDismissMessageMenu = onDismissMessageMenu,
@@ -90,6 +92,7 @@ fun MessageListItemUiPreview() {
                 id = "1",
                 date = UiText.DynamicString("Monday"),
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = {},
             onDismissMessageMenu = {},
             onDeleteClick = {},
@@ -107,9 +110,9 @@ fun MessageListItemUiLocalUserMessagePreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                isMenuOpen = true,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = {},
             onDismissMessageMenu = {},
             onDeleteClick = {},
@@ -133,6 +136,7 @@ fun MessageListItemUiOtherUserMessagePreview() {
                     initials = "AL"
                 )
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = {},
             onDismissMessageMenu = {},
             onDeleteClick = {},

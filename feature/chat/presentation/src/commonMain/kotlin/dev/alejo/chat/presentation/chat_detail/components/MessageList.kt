@@ -27,6 +27,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MessageList(
     messages: List<MessageUi>,
+    messageWithOpenMenu: MessageUi.LocalUserMessage?,
     listState: LazyListState,
     onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onMessageRetryClick: (MessageUi.LocalUserMessage) -> Unit,
@@ -62,11 +63,13 @@ fun MessageList(
             ) { message ->
                 MessageListItemUi(
                     messageUi = message,
+                    messageWithOpenMenu = messageWithOpenMenu,
                     onMessageLongClick = onMessageLongClick,
                     onDismissMessageMenu = onDismissMessageMenu,
                     onDeleteClick = onDeleteMessageClick,
                     onRetryClick = onMessageRetryClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .animateItem()
                 )
             }
@@ -85,10 +88,10 @@ fun MessageListPreview() {
                     id = "1",
                     content = "Hey mate!",
                     deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                    isMenuOpen = false,
                     formattedSentTime = UiText.DynamicString("10:00 AM")
                 )
             ),
+            messageWithOpenMenu = null,
             modifier = Modifier.fillMaxSize(),
             onMessageLongClick = {},
             onMessageRetryClick = {},
@@ -105,6 +108,7 @@ fun MessageListEmptyPreview() {
     NexoTheme {
         MessageList(
             messages = emptyList(),
+            messageWithOpenMenu = null,
             listState = LazyListState(),
             onMessageLongClick = {},
             onMessageRetryClick = {},

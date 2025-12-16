@@ -34,6 +34,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun LocalUserMessageUi(
     message: MessageUi.LocalUserMessage,
+    messageWithOpenMenu: MessageUi.LocalUserMessage?,
     onMessageLongClick: () -> Unit,
     onDismissMessageMenu: () -> Unit,
     onDeleteClick: () -> Unit = {},
@@ -70,7 +71,7 @@ fun LocalUserMessageUi(
             )
 
             NexoDropDownMenu(
-                isOpen = message.isMenuOpen,
+                isOpen = messageWithOpenMenu?.id == message.id,
                 items = dropDownMenuItems,
                 onDismiss = onDismissMessageMenu
             )
@@ -99,9 +100,9 @@ fun LocalUserMessageUiFailedPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.FAILED,
-                isMenuOpen = false,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = { },
             onDismissMessageMenu = { },
             onDeleteClick = { },
@@ -119,9 +120,9 @@ fun LocalUserMessageUiFailedRetryPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                isMenuOpen = true,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = { },
             onDismissMessageMenu = { },
             onDeleteClick = { },
@@ -139,9 +140,9 @@ fun LocalUserMessageUiSentPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                isMenuOpen = false,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = { },
             onDismissMessageMenu = { },
             onDeleteClick = { },
@@ -159,9 +160,9 @@ fun LocalUserMessageUiSendingPreview() {
                 id = "",
                 content = "Hey mate",
                 deliveryStatus = ChatMessageDeliveryStatus.SENDING,
-                isMenuOpen = false,
                 formattedSentTime = UiText.DynamicString("10:00 AM")
             ),
+            messageWithOpenMenu = null,
             onMessageLongClick = { },
             onDismissMessageMenu = { },
             onDeleteClick = { },
