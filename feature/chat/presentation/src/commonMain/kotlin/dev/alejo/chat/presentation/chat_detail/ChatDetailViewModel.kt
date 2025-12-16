@@ -12,6 +12,7 @@ import dev.alejo.chat.domain.message.MessageRepository
 import dev.alejo.chat.domain.models.ConnectionState
 import dev.alejo.chat.domain.models.OutgoingNewMessage
 import dev.alejo.chat.presentation.mappers.toUi
+import dev.alejo.chat.presentation.model.MessageUi
 import dev.alejo.core.domain.auth.SessionStorage
 import dev.alejo.core.domain.onFailure
 import dev.alejo.core.domain.onSuccess
@@ -72,8 +73,10 @@ class ChatDetailViewModel(
         if (authInfo == null) {
             return@combine ChatDetailState()
         }
+
         currentState.copy(
-            chatUi = chatInfo.chat.toUi(authInfo.user.id)
+            chatUi = chatInfo.chat.toUi(authInfo.user.id),
+            messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
         )
     }
 
@@ -108,7 +111,7 @@ class ChatDetailViewModel(
             ChatDetailAction.OnDismissMessageMenu -> {}
             ChatDetailAction.OnLeaveChatCLick -> onLeaveChatClick()
             is ChatDetailAction.OnMessageLongClick -> {}
-            is ChatDetailAction.OnRetryClick -> {}
+            is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
             ChatDetailAction.OnScrollToTop -> {}
             ChatDetailAction.OnSendMessageClick -> sendMessage()
         }
@@ -122,6 +125,16 @@ class ChatDetailViewModel(
                 )
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun retryMessage(message: MessageUi.LocalUserMessage) {
+        viewModelScope.launch {
+            messageRepository
+                .retryMessage(message.id)
+                .onFailure { error ->
+                    _events.send(ChatDetailEvent.OnError(error.toUiText()))
+                }
+        }
     }
 
     private fun sendMessage() {
@@ -167,18 +180,6 @@ class ChatDetailViewModel(
                 if(chatId != null) {
                     messageRepository.getMessagesForChat(chatId)
                 } else emptyFlow()
-            }
-            .combine(sessionStorage.observeAuthInf()) { messages, authInfo ->
-                if (authInfo == null) {
-                    return@combine messages
-                }
-
-                _state.update {
-                    it.copy(
-                        messages = messages.map { it.toUi(authInfo.user.id)  }
-                    )
-                }
-                messages
             }
 
         val isNearBottom = state.map { it.isNearBottom }.distinctUntilChanged()
