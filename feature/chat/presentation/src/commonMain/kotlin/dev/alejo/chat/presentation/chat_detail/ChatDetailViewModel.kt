@@ -13,6 +13,7 @@ import dev.alejo.chat.domain.models.ChatMessage
 import dev.alejo.chat.domain.models.ConnectionState
 import dev.alejo.chat.domain.models.OutgoingNewMessage
 import dev.alejo.chat.presentation.mappers.toUi
+import dev.alejo.chat.presentation.mappers.toUiList
 import dev.alejo.chat.presentation.model.MessageUi
 import dev.alejo.core.domain.auth.SessionStorage
 import dev.alejo.core.domain.onFailure
@@ -81,7 +82,7 @@ class ChatDetailViewModel(
 
         currentState.copy(
             chatUi = chatInfo.chat.toUi(authInfo.user.id),
-            messages = chatInfo.messages.map { it.toUi(authInfo.user.id) }
+            messages = chatInfo.messages.toUiList(authInfo.user.id)
         )
     }
 
@@ -122,8 +123,9 @@ class ChatDetailViewModel(
             ChatDetailAction.OnLeaveChatCLick -> onLeaveChatClick()
             is ChatDetailAction.OnMessageLongClick -> onMessageLongClick(action.message)
             is ChatDetailAction.OnRetryClick -> retryMessage(action.message)
-            ChatDetailAction.OnScrollToTop -> {}
+            ChatDetailAction.OnScrollToTop -> onScrollToTop()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
+            ChatDetailAction.OnRetryPaginationClick -> retryPagination()
         }
     }
 
@@ -135,6 +137,16 @@ class ChatDetailViewModel(
                 )
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun retryPagination() = loadNextItems()
+
+    private fun onScrollToTop() = loadNextItems()
+
+    private fun loadNextItems() {
+        viewModelScope.launch {
+            currentPaginator?.loadNextItems()
+        }
     }
 
     private fun onMessageLongClick(message: MessageUi.LocalUserMessage) {
@@ -243,9 +255,7 @@ class ChatDetailViewModel(
             .connectionState
             .onEach { connectionState ->
                 if (connectionState == ConnectionState.CONNECTED) {
-                    _chatId.value?.let {
-                        messageRepository.fetchMessages(it, before = null)
-                    }
+                    currentPaginator?.loadNextItems()
                 }
 
                 _state.update {
@@ -275,27 +285,28 @@ class ChatDetailViewModel(
             },
             onError = { throwable ->
                 if (throwable is DataErrorException) {
-                    _events.send(ChatDetailEvent.OnError(throwable.error.toUiText()))
+                    _state.update {
+                        it.copy(
+                            paginationError = throwable.error.toUiText()
+                        )
+                    }
                 }
             },
             onSuccess = { messages, _ ->
                 _state.update {
                     it.copy(
-                        endReached = messages.isEmpty()
+                        endReached = messages.isEmpty(),
+                        paginationError = null
                     )
                 }
             }
-        )
+         )
 
         _state.update {
             it.copy(
                 endReached = false,
                 isPaginationLoading = false,
             )
-        }
-
-        viewModelScope.launch {
-            currentPaginator?.loadNextItems()
         }
     }
 
