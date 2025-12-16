@@ -97,11 +97,41 @@ class OfflineFirstMessageRepository(
                 .sendMessage(dto.toJsonPayload())
                 .onFailure { error ->
                     applicationScope.launch {
-                        database.chatMessageDao.upsertMessage(
-                            dto.toEntity(
-                                senderId = localUser.id,
-                                deliveryStatus = ChatMessageDeliveryStatus.FAILED
-                            )
+                        database.chatMessageDao.updateDeliveryStatus(
+                            messageId = entity.messageId,
+                            timestamp = Clock.System.now().toEpochMilliseconds(),
+                            status = ChatMessageDeliveryStatus.FAILED.name
+                        )
+                    }.join()
+                }
+        }
+    }
+
+    override suspend fun retryMessage(messageId: String): EmptyResult<DataError> {
+        return safeDatabaseUpdate {
+            val message = database.chatMessageDao.getMessageById(messageId)
+                ?: return Result.Failure(DataError.Local.NOT_FOUND)
+
+            database.chatMessageDao.updateDeliveryStatus(
+                messageId = messageId,
+                timestamp = Clock.System.now().toEpochMilliseconds(),
+                status = ChatMessageDeliveryStatus.SENDING.name
+            )
+
+            val outgoingNewMessage = OutgoingWebSocketDto.NewMessage(
+                chatId = message.chatId,
+                messageId = messageId,
+                content = message.content
+            )
+
+            return webSocketConnector
+                .sendMessage(outgoingNewMessage.toJsonPayload())
+                .onFailure {
+                    applicationScope.launch {
+                        database.chatMessageDao.updateDeliveryStatus(
+                            messageId = messageId,
+                            timestamp = Clock.System.now().toEpochMilliseconds(),
+                            status = ChatMessageDeliveryStatus.FAILED.name
                         )
                     }.join()
                 }
