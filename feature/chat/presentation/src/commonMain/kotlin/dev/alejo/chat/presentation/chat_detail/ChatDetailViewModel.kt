@@ -131,8 +131,12 @@ class ChatDetailViewModel(
         viewModelScope.launch {
             messageRepository
                 .retryMessage(message.id)
+                .onSuccess {
+                    state.value.messageTextFieldState.clearText()
+                }
                 .onFailure { error ->
                     _events.send(ChatDetailEvent.OnError(error.toUiText()))
+                    state.value.messageTextFieldState.clearText()
                 }
         }
     }
