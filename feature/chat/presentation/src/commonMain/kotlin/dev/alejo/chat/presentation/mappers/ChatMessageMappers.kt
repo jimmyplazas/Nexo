@@ -4,6 +4,12 @@ import dev.alejo.chat.domain.models.MessageWithSender
 import dev.alejo.chat.presentation.model.MessageUi
 import dev.alejo.chat.presentation.util.DateUtils
 
+fun List<MessageWithSender>.toUiList(localUserId: String): List<MessageUi> {
+    return this
+        .sortedByDescending { it.message.createdAt }
+        .map { it.toUi(localUserId) }
+}
+
 fun MessageWithSender.toUi(localUserId: String): MessageUi {
     val isFromCLocalUser = this.sender.userId == localUserId
     return if (isFromCLocalUser) {
