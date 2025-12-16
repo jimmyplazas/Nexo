@@ -6,9 +6,9 @@ sealed interface ChatDetailAction {
     data object OnSendMessageClick : ChatDetailAction
     data object OnScrollToTop : ChatDetailAction
     data class OnSelectChat(val chatId: String?) : ChatDetailAction
-    data class OnDeleteMessageClick(val message: MessageUi.LocalUserMessage?) : ChatDetailAction
-    data class OnMessageLongClick(val message: MessageUi.LocalUserMessage?) : ChatDetailAction
-    data class OnRetryClick(val message: MessageUi.LocalUserMessage?) : ChatDetailAction
+    data class OnDeleteMessageClick(val message: MessageUi.LocalUserMessage) : ChatDetailAction
+    data class OnMessageLongClick(val message: MessageUi.LocalUserMessage) : ChatDetailAction
+    data class OnRetryClick(val message: MessageUi.LocalUserMessage) : ChatDetailAction
     data object OnDismissMessageMenu : ChatDetailAction
     data object OnBackCLick : ChatDetailAction
     data object OnChatOptionsCLick : ChatDetailAction
