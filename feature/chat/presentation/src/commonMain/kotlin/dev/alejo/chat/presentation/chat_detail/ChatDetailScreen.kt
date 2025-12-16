@@ -177,6 +177,7 @@ fun ChatDetailScreen(
                         }
                         MessageList(
                             messages = state.messages,
+                            messageWithOpenMenu = state.messageWithOpenMenu,
                             listState = messageListState,
                             onMessageLongClick = { message ->
                                 onAction(ChatDetailAction.OnMessageLongClick(message))
@@ -307,7 +308,6 @@ private fun ChatDetailScreenMessagesPreview() {
                             id = Uuid.random().toString(),
                             content = "Lorem ipsum",
                             deliveryStatus = ChatMessageDeliveryStatus.SENT,
-                            isMenuOpen = false,
                             formattedSentTime = UiText.DynamicString("Friday 10:00 PM"),
                         )
                     } else {
