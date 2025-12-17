@@ -20,6 +20,7 @@ import dev.alejo.core.domain.onFailure
 import dev.alejo.core.domain.onSuccess
 import dev.alejo.core.domain.util.DataErrorException
 import dev.alejo.core.domain.util.Paginator
+import dev.alejo.core.presentation.util.UiText
 import dev.alejo.core.presentation.util.toUiText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -37,6 +38,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import nexo.feature.chat.presentation.generated.resources.Res
+import nexo.feature.chat.presentation.generated.resources.today
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -114,8 +117,6 @@ class ChatDetailViewModel(
     fun onAction(action: ChatDetailAction) {
         when (action) {
             is ChatDetailAction.OnSelectChat -> switchChat(action.chatId)
-            ChatDetailAction.OnBackCLick -> {}
-            ChatDetailAction.OnChatMembersCLick -> {}
             ChatDetailAction.OnChatOptionsCLick -> onChatOptionsClick()
             is ChatDetailAction.OnDeleteMessageClick -> deleteMessage(action.message)
             ChatDetailAction.OnDismissChatOptions -> onDismissChatOptions()
@@ -126,6 +127,68 @@ class ChatDetailViewModel(
             ChatDetailAction.OnScrollToTop -> onScrollToTop()
             ChatDetailAction.OnSendMessageClick -> sendMessage()
             ChatDetailAction.OnRetryPaginationClick -> retryPagination()
+            ChatDetailAction.OnHideBanner -> hideBanner()
+            is ChatDetailAction.OnTopVisibleIndexChanged -> updateBanner(action.topVisibleIndex)
+            is ChatDetailAction.OnFirstVisibleIndexChanged -> updateNearBottom(action.index)
+            else -> Unit
+        }
+    }
+
+    private fun updateNearBottom(firstVisibleIndex: Int) {
+        _state.update {
+            it.copy(
+                isNearBottom = firstVisibleIndex <= 3
+            )
+        }
+    }
+
+    private fun updateBanner(topVisibleIndex: Int) {
+        val visibleDate = calculateBannerDateFromIndex(
+            messages = state.value.messages,
+            index = topVisibleIndex
+        )
+
+        _state.update {
+            it.copy(
+                bannerState = BannerState(
+                    formattedDate = visibleDate,
+                    isVisible = visibleDate != null
+                )
+            )
+        }
+    }
+
+    private fun calculateBannerDateFromIndex(
+        messages: List<MessageUi>,
+        index: Int
+    ): UiText? {
+        if (messages.isEmpty() || index < 0 || index >= messages.size) {
+            return null
+        }
+
+        val nearestDateSeparator = (index until messages.size)
+            .asSequence()
+            .mapNotNull { index ->
+                val item = messages.getOrNull(index)
+                if (item is MessageUi.DateSeparator) item.date else null
+            }
+            .firstOrNull()
+
+        return when (nearestDateSeparator) {
+            is UiText.Resource -> {
+                if (nearestDateSeparator.id == Res.string.today) null else nearestDateSeparator
+            }
+            else -> nearestDateSeparator
+        }
+    }
+
+    private fun hideBanner() {
+        _state.update {
+            it.copy(
+                bannerState = it.bannerState.copy(
+                    isVisible = false
+                )
+            )
         }
     }
 
