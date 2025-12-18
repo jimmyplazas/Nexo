@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.profile.components.ProfileHeaderSection
@@ -36,6 +37,7 @@ import dev.alejo.core.designsystem.components.dialogs.NexoAdaptiveDialogSheetLay
 import dev.alejo.core.designsystem.components.textfields.NexoPasswordTextField
 import dev.alejo.core.designsystem.components.textfields.NexoTextField
 import dev.alejo.core.designsystem.theme.NexoTheme
+import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.presentation.util.clearFocusOnTap
 import dev.alejo.core.presentation.util.currentDeviceConfiguration
 import nexo.feature.chat.presentation.generated.resources.Res
@@ -48,6 +50,7 @@ import nexo.feature.chat.presentation.generated.resources.delete_profile_picture
 import nexo.feature.chat.presentation.generated.resources.email
 import nexo.feature.chat.presentation.generated.resources.new_password
 import nexo.feature.chat.presentation.generated.resources.password
+import nexo.feature.chat.presentation.generated.resources.password_change_successful
 import nexo.feature.chat.presentation.generated.resources.password_hint
 import nexo.feature.chat.presentation.generated.resources.profile_picture
 import nexo.feature.chat.presentation.generated.resources.save
@@ -191,8 +194,7 @@ fun ProfileScreen(
                     onAction(ProfileAction.OnToggleCurrentPasswordVisibility)
                 },
                 placeholder = stringResource(Res.string.current_password),
-                supportingText = state.currentPasswordError?.asString(),
-                isError = state.currentPasswordError != null
+                isError = state.newPasswordError != null
             )
             NexoPasswordTextField(
                 state = state.newPasswordTextState,
@@ -205,7 +207,15 @@ fun ProfileScreen(
                     ?: stringResource(Res.string.password_hint),
                 isError = state.newPasswordError != null
             )
-
+            if (state.isPasswordChangeSuccessful) {
+                Text(
+                    text = stringResource(Res.string.password_change_successful),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.extended.success,
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End)
