@@ -22,6 +22,7 @@ import dev.alejo.chat.presentation.chat_detail.ChatDetailRoot
 import dev.alejo.chat.presentation.chat_list.ChatListRoot
 import dev.alejo.chat.presentation.create_chat.CreateChatRoot
 import dev.alejo.chat.presentation.manage_chat.ManageChatRoot
+import dev.alejo.chat.presentation.profile.ProfileRoot
 import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.presentation.util.DialogSheetScopeViewModel
 import kotlinx.coroutines.launch
@@ -130,6 +131,16 @@ fun ChatListDetailAdaptiveLayout(
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             },
             onMembersAdded = {
+                chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
+            }
+        )
+    }
+
+    DialogSheetScopeViewModel(
+        visible = sharedState.dialogState is DialogState.Profile
+    ) {
+        ProfileRoot(
+            onDismiss = {
                 chatListDetailViewModel.onAction(ChatListDetailAction.OnDismissCurrentDialog)
             }
         )
