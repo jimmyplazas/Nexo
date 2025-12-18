@@ -54,4 +54,7 @@
     <string name="delete_profile_picture_desc">Are you sure you want to delete your profile picture?\nThis action cannot be undone.</string>
     <string name="password_hint">Use 9+ characters, at least one digit and one uppercase letter</string>
     <string name="contact_nexo_support_change_email">Contact the Nexo support to change your email</string>
+    <string name="error_current_password_incorrect">Your current password is not correct</string>
+    <string name="error_current_password_equals_to_new_password">Your new password can't be equal to the old one.</string>
+    <string name="password_change_successful">You've successfully changed your password'</string>
 </resources>
