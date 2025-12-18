@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -27,6 +28,7 @@ fun NexoDropDownMenu(
 ) {
     DropdownMenu(
         expanded = isOpen,
+        shape = RoundedCornerShape(16.dp),
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.surface,
         border = BorderStroke(
