@@ -1,6 +1,7 @@
 package dev.alejo.core.data.auth
 
 import dev.alejo.core.data.dto.AuthInfoSerializable
+import dev.alejo.core.data.dto.requests.ChangePasswordRequest
 import dev.alejo.core.data.dto.requests.EmailRequest
 import dev.alejo.core.data.dto.requests.LoginRequest
 import dev.alejo.core.data.dto.requests.RegisterRequest
@@ -79,6 +80,19 @@ class KtorAuthService(
             route = "/auth/reset-password",
             body = ResetPasswordRequest(
                 token = token,
+                newPassword = newPassword
+            )
+        )
+    }
+
+    override suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String
+    ): EmptyResult<DataError.Remote> {
+        return httpClient.post(
+            route = "/auth/change-password",
+            body = ChangePasswordRequest(
+                oldPassword = currentPassword,
                 newPassword = newPassword
             )
         )
