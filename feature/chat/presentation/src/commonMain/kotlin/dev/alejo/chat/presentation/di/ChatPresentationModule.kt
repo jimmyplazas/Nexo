@@ -5,6 +5,7 @@ import dev.alejo.chat.presentation.chat_list.ChatListViewModel
 import dev.alejo.chat.presentation.chat_list_detail.ChatListDetailViewModel
 import dev.alejo.chat.presentation.create_chat.CreateChatViewModel
 import dev.alejo.chat.presentation.manage_chat.ManageChatViewModel
+import dev.alejo.chat.presentation.profile.ProfileViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -14,4 +15,5 @@ val chatPresentationModule = module {
     viewModelOf(::CreateChatViewModel)
     viewModelOf(::ChatDetailViewModel)
     viewModelOf(::ManageChatViewModel)
+    viewModelOf(::ProfileViewModel)
 }
