@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.alejo.chat.presentation.profile.components.ProfileHeaderSection
 import dev.alejo.chat.presentation.profile.components.ProfileSectionLayout
+import dev.alejo.chat.presentation.profile.mediapicker.rememberImagePickerLauncher
 import dev.alejo.core.designsystem.components.avatar.AvatarSize
 import dev.alejo.core.designsystem.components.avatar.NexoAvatarPhoto
 import dev.alejo.core.designsystem.components.brand.NexoHorizontalDivider
@@ -68,6 +69,12 @@ fun ProfileRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    val imagePickerLauncher = rememberImagePickerLauncher { pickedImageData ->
+        viewModel.onAction(ProfileAction.OnPictureSelected(
+            bytes = pickedImageData.bytes,
+            mimeType = pickedImageData.mimeType
+        ))
+    }
     NexoAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
     ) {
@@ -76,6 +83,9 @@ fun ProfileRoot(
             onAction = { action ->
                 when (action) {
                     is ProfileAction.OnDismiss -> onDismiss()
+                    is ProfileAction.OnUploadPictureClick -> {
+                        imagePickerLauncher.launch()
+                    }
                     else -> Unit
                 }
                 viewModel.onAction(action)
