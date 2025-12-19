@@ -4,13 +4,12 @@ import dev.alejo.chat.data.dto.ChatParticipantDto
 import dev.alejo.chat.data.dto.request.ConfirmProfilePictureRequest
 import dev.alejo.chat.data.dto.response.ProfilePictureUploadUrlsResponse
 import dev.alejo.chat.data.mappers.toDomain
-import dev.alejo.chat.domain.participant.ChatParticipantService
 import dev.alejo.chat.domain.models.ChatParticipant
 import dev.alejo.chat.domain.models.ProfilePictureUploadUrls
-import dev.alejo.core.data.networking.constructRoute
+import dev.alejo.chat.domain.participant.ChatParticipantService
+import dev.alejo.core.data.networking.delete
 import dev.alejo.core.data.networking.get
 import dev.alejo.core.data.networking.post
-import dev.alejo.core.data.networking.put
 import dev.alejo.core.data.networking.safeCall
 import dev.alejo.core.domain.EmptyResult
 import dev.alejo.core.domain.Result
@@ -18,12 +17,9 @@ import dev.alejo.core.domain.map
 import dev.alejo.core.domain.util.DataError
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
-import io.ktor.client.request.parameter
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 class KtorChatParticipantService(
     private val httpClient: HttpClient
@@ -79,6 +75,12 @@ class KtorChatParticipantService(
         return httpClient.post<ConfirmProfilePictureRequest, Unit>(
             route = "/participants/confirm-picture-upload",
             body = ConfirmProfilePictureRequest(publicUrl)
+        )
+    }
+
+    override suspend fun deleteProfilePicture(): EmptyResult<DataError.Remote> {
+        return httpClient.delete(
+            route = "/participants/profile-picture"
         )
     }
 }
