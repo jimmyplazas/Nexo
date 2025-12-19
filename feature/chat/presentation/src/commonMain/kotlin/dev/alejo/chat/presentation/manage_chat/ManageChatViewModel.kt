@@ -6,7 +6,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.alejo.chat.domain.chat.ChatParticipantService
+import dev.alejo.chat.domain.participant.ChatParticipantService
 import dev.alejo.chat.domain.chat.ChatRepository
 import dev.alejo.chat.presentation.components.manage_chat.ManageChatAction
 import dev.alejo.chat.presentation.components.manage_chat.ManageChatState
