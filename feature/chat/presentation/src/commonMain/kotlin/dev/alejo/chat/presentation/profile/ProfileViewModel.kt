@@ -1,10 +1,13 @@
 package dev.alejo.chat.presentation.profile
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.alejo.chat.domain.participant.ChatParticipantRepository
 import dev.alejo.core.domain.auth.AuthService
+import dev.alejo.core.domain.auth.SessionStorage
 import dev.alejo.core.domain.onFailure
 import dev.alejo.core.domain.onSuccess
 import dev.alejo.core.domain.util.DataError
@@ -26,15 +29,29 @@ import nexo.feature.chat.presentation.generated.resources.error_current_password
 import nexo.feature.chat.presentation.generated.resources.error_current_password_incorrect
 
 class ProfileViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val chatParticipantRepository: ChatParticipantRepository,
+    private val sessionStorage: SessionStorage
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
     private val _state = MutableStateFlow(ProfileState())
-    val state = _state
+    val state = combine(
+        _state,
+        sessionStorage.observeAuthInf()
+    ) { currentState, authInfo ->
+        if (authInfo != null) {
+            currentState.copy(
+                username = authInfo.user.username,
+                emailTextState = TextFieldState(initialText = authInfo.user.email),
+                profilePictureUrl = authInfo.user.profilePicture
+            )
+        } else currentState
+    }
         .onStart {
             if (!hasLoadedInitialData) {
+                fetchLocalParticipantDetails()
                 observeCanChangePassword()
                 hasLoadedInitialData = true
             }
@@ -51,6 +68,13 @@ class ProfileViewModel(
             is ProfileAction.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
             is ProfileAction.OnToggleNewPasswordVisibility -> toggleNewPasswordVisibility()
             else -> Unit
+        }
+    }
+
+    private fun fetchLocalParticipantDetails() {
+        viewModelScope.launch {
+            chatParticipantRepository
+                .fetchLocalParticipant()
         }
     }
 
