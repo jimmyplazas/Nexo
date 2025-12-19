@@ -1,4 +1,4 @@
-package dev.alejo.chat.domain.chat
+package dev.alejo.chat.domain.participant
 
 import dev.alejo.chat.domain.models.ChatParticipant
 import dev.alejo.core.domain.Result
@@ -8,4 +8,5 @@ interface ChatParticipantService {
     suspend fun searchParticipant(
         query: String
     ): Result<ChatParticipant, DataError.Remote>
+    suspend fun getLocalParticipant(): Result<ChatParticipant, DataError.Remote>
 }
