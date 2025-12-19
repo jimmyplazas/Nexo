@@ -68,8 +68,65 @@ class ProfileViewModel(
             is ProfileAction.OnChangePasswordClick -> changePassword()
             is ProfileAction.OnToggleCurrentPasswordVisibility -> toggleCurrentPasswordVisibility()
             is ProfileAction.OnToggleNewPasswordVisibility -> toggleNewPasswordVisibility()
-            is ProfileAction.OnPictureSelected -> uploadProfilePicture(action.bytes, action.mimeType)
+            is ProfileAction.OnPictureSelected -> uploadProfilePicture(
+                action.bytes,
+                action.mimeType
+            )
+
+            is ProfileAction.OnDeletePictureClick -> showDeleteConfirmation()
+            is ProfileAction.OnConfirmDeleteClick -> deleteProfilePicture()
+            is ProfileAction.OnDismissDeleteConfirmationDialogClick -> dismissDeleteConfirmation()
             else -> Unit
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        _state.update {
+            it.copy(
+                showDeleteConfirmationDialog = true
+            )
+        }
+    }
+
+    private fun deleteProfilePicture() {
+        if (state.value.isDeletingImage && state.value.profilePictureUrl == null) {
+            return
+        }
+
+        _state.update {
+            it.copy(
+                isDeletingImage = true,
+                imageError = null
+            )
+        }
+
+        viewModelScope.launch {
+            chatParticipantRepository
+                .deleteProfilePicture()
+                .onSuccess {
+                    _state.update {
+                        it.copy(
+                            isDeletingImage = false,
+                            showDeleteConfirmationDialog = false
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isDeletingImage = false,
+                            imageError = error.toUiText()
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun dismissDeleteConfirmation() {
+        _state.update {
+            it.copy(
+                showDeleteConfirmationDialog = false
+            )
         }
     }
 
@@ -202,9 +259,11 @@ class ProfileViewModel(
                         DataError.Remote.UNAUTHORIZED -> {
                             UiText.Resource(Res.string.error_current_password_incorrect)
                         }
+
                         DataError.Remote.CONFLICT -> {
                             UiText.Resource(Res.string.error_current_password_equals_to_new_password)
                         }
+
                         else -> error.toUiText()
                     }
                     _state.update {
