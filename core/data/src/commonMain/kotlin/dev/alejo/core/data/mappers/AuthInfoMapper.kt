@@ -5,21 +5,21 @@ import dev.alejo.core.data.dto.UserSerializable
 import dev.alejo.core.domain.auth.AuthInfo
 import dev.alejo.core.domain.auth.User
 
-fun AuthInfoSerializable.toDomain(): AuthInfo {
+fun AuthInfoSerializable.toDomain(profilePictureUrl: String? = null): AuthInfo {
     return AuthInfo(
         accessToken = accessToken,
         refreshToken = refreshToken,
-        user = user.toDomain(),
+        user = user.toDomain(profilePictureUrl),
     )
 }
 
-fun UserSerializable.toDomain(): User {
+fun UserSerializable.toDomain(profilePictureUrl: String? = null): User {
     return User(
         id = id,
         email = email,
         username = username,
         hasVerifiedEmail = hasVerifiedEmail,
-        profilePicture = profilePicture
+        profilePicture = profilePictureUrl ?: profilePicture
     )
 }
 
