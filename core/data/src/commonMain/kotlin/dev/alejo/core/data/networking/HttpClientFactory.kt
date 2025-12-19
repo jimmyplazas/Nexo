@@ -111,7 +111,9 @@ class HttpClientFactory(
                                 markAsRefreshTokenRequest()
                             }
                         ).onSuccess { newAuthInfo ->
-                            sessionStorage.set(newAuthInfo.toDomain())
+                            sessionStorage.set(
+                                newAuthInfo.toDomain(authInfo.user.profilePicture)
+                            )
                             bearerTokens = BearerTokens(
                                 accessToken = newAuthInfo.accessToken,
                                 refreshToken = newAuthInfo.refreshToken
