@@ -32,7 +32,7 @@ sealed interface IncomingWebSocketDto {
     @Serializable
     data class ProfilePictureUpdatedDto(
         val userId: String,
-        val newUrl: String,
+        val newUrl: String?,
         val type: IncomingWebSocketType = IncomingWebSocketType.PROFILE_PICTURE_UPDATED
     ) : IncomingWebSocketDto
 
