@@ -60,6 +60,11 @@ class ChatDetailViewModel(
     private var currentPaginator: Paginator<String?, ChatMessage>? = null
 
     private val chatInfoFlow = _chatId
+        .onEach { chatId ->
+            if (chatId != null) {
+                setupPaginatorForChat(chatId)
+            } else currentPaginator = null
+        }
         .flatMapLatest { chatId ->
             if (chatId != null) {
                 chatRepository.getChatInfoById(chatId)
@@ -90,11 +95,6 @@ class ChatDetailViewModel(
     }
 
     val state = _chatId
-        .onEach { chatId ->
-            if (chatId != null) {
-                setupPaginatorForChat(chatId)
-            } else currentPaginator = null
-        }
         .flatMapLatest { chatId ->
             if (chatId != null) {
                 stateWithMessages
