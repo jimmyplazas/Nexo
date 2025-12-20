@@ -34,6 +34,8 @@ import dev.alejo.core.designsystem.components.buttons.NexoFloatingActionButton
 import dev.alejo.core.designsystem.components.dialogs.DestructiveConfirmationDialog
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
+import dev.alejo.core.presentation.permissions.Permission
+import dev.alejo.core.presentation.permissions.rememberPermissionController
 import nexo.feature.chat.presentation.generated.resources.Res
 import nexo.feature.chat.presentation.generated.resources.cancel
 import nexo.feature.chat.presentation.generated.resources.create_chat
@@ -84,6 +86,12 @@ fun ChatListScreen(
     onAction: (ChatListAction) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
+
+    val permissionController = rememberPermissionController()
+    LaunchedEffect(true) {
+        permissionController.requestPermission(Permission.NOTIFICATIONS)
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
