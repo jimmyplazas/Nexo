@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,6 +37,8 @@ import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.presentation.permissions.Permission
 import dev.alejo.core.presentation.permissions.rememberPermissionController
+import dev.alejo.core.presentation.util.ObserveAsEvents
+import kotlinx.coroutines.launch
 import nexo.feature.chat.presentation.generated.resources.Res
 import nexo.feature.chat.presentation.generated.resources.cancel
 import nexo.feature.chat.presentation.generated.resources.create_chat
@@ -52,7 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun ChatListRoot(
     selectedSChatId: String?,
     onChatClick: (String?) -> Unit,
-    onConfirmLogoutCLick: () -> Unit,
+    onSuccessfulLogout: () -> Unit,
     onCreateChatCLick: () -> Unit,
     onProfileSettingsCLick: () -> Unit,
     viewModel: ChatListViewModel = koinViewModel(),
@@ -64,12 +67,25 @@ fun ChatListRoot(
         viewModel.onAction(ChatListAction.OnSelectChat(selectedSChatId))
     }
 
+    val scope = rememberCoroutineScope()
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is ChatListEvent.OnLogoutError -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = event.error.asStringAsync()
+                    )
+                }
+            }
+            ChatListEvent.OnLogoutSuccess -> onSuccessfulLogout()
+        }
+    }
+
     ChatListScreen(
         state = state,
         onAction = { action ->
             when (action) {
                 is ChatListAction.OnSelectChat -> onChatClick(action.chatId)
-                ChatListAction.OnConfirmLogout -> onConfirmLogoutCLick()
                 ChatListAction.OnCreateChatCLick -> onCreateChatCLick()
                 ChatListAction.OnProfileSettingsCLick -> onProfileSettingsCLick()
                 else -> Unit
