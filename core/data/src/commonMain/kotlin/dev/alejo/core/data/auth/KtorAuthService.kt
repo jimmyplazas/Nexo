@@ -4,6 +4,7 @@ import dev.alejo.core.data.dto.AuthInfoSerializable
 import dev.alejo.core.data.dto.requests.ChangePasswordRequest
 import dev.alejo.core.data.dto.requests.EmailRequest
 import dev.alejo.core.data.dto.requests.LoginRequest
+import dev.alejo.core.data.dto.requests.RefreshRequest
 import dev.alejo.core.data.dto.requests.RegisterRequest
 import dev.alejo.core.data.dto.requests.ResetPasswordRequest
 import dev.alejo.core.data.mappers.toDomain
@@ -14,8 +15,11 @@ import dev.alejo.core.domain.Result
 import dev.alejo.core.domain.auth.AuthInfo
 import dev.alejo.core.domain.auth.AuthService
 import dev.alejo.core.domain.map
+import dev.alejo.core.domain.onSuccess
 import dev.alejo.core.domain.util.DataError
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.auth.authProvider
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 
 class KtorAuthService(
     private val httpClient: HttpClient
@@ -96,6 +100,15 @@ class KtorAuthService(
                 newPassword = newPassword
             )
         )
+    }
+
+    override suspend fun logout(refreshToken: String): EmptyResult<DataError.Remote> {
+        return httpClient.post<RefreshRequest, Unit>(
+            route = "/auth/logout",
+            body = RefreshRequest(refreshToken)
+        ).onSuccess {
+            httpClient.authProvider<BearerAuthProvider>()?.clearToken()
+        }
     }
 
 }
