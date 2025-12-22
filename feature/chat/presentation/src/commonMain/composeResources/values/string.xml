@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
+    <string name="only_you">Only you</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="create_chat">Create Chat</string>

@@ -20,6 +20,7 @@ import dev.alejo.core.designsystem.theme.extended
 import dev.alejo.core.designsystem.theme.titleXSmall
 import nexo.feature.chat.presentation.generated.resources.Res
 import nexo.feature.chat.presentation.generated.resources.group_chat
+import nexo.feature.chat.presentation.generated.resources.only_you
 import nexo.feature.chat.presentation.generated.resources.you
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -36,9 +37,11 @@ fun ChatItemHeaderRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        NexoStackedAvatars(
-            avatars = chat.otherParticipants
-        )
+        if (chat.otherParticipants.isNotEmpty()) {
+            NexoStackedAvatars(
+                avatars = chat.otherParticipants
+            )
+        }
         Column(
             modifier = Modifier
                 .weight(1f),
@@ -46,7 +49,8 @@ fun ChatItemHeaderRow(
         ) {
             Text(
                 text = if (!isGroupChat) {
-                    chat.otherParticipants.first().username
+                    chat.otherParticipants.firstOrNull()?.username
+                        ?: stringResource(Res.string.only_you)
                 } else {
                     stringResource(Res.string.group_chat)
                 },
