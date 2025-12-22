@@ -18,7 +18,8 @@ sealed interface ChatGraphRoutes {
 }
 
 fun NavGraphBuilder.chatGraph(
-    navController: NavController
+    navController: NavController,
+    onLogout: () -> Unit
 ) {
     navigation<ChatGraphRoutes.Graph>(
         startDestination = ChatGraphRoutes.ChatListDetailRoute()
@@ -34,9 +35,7 @@ fun NavGraphBuilder.chatGraph(
 
             ChatListDetailAdaptiveLayout(
                 initialChatId = chatId,
-                onLogout = {
-
-                }
+                onLogout = onLogout
             )
         }
     }
