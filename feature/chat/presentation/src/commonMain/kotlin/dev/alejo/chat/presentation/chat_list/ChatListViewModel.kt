@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.alejo.chat.domain.chat.ChatRepository
 import dev.alejo.chat.domain.notification.DeviceTokenService
+import dev.alejo.chat.domain.participant.ChatParticipantRepository
 import dev.alejo.chat.presentation.mappers.toUi
 import dev.alejo.core.domain.auth.AuthService
 import dev.alejo.core.domain.auth.SessionStorage
@@ -26,7 +27,8 @@ class ChatListViewModel(
     private val repository: ChatRepository,
     private val sessionStorage: SessionStorage,
     private val deviceTokenService: DeviceTokenService,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val chatParticipantRepository: ChatParticipantRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -51,6 +53,7 @@ class ChatListViewModel(
     }
         .onStart {
             if (!hasLoadedInitialData) {
+                loadLocalChatParticipant()
                 loadChats()
                 hasLoadedInitialData = true
             }
@@ -101,6 +104,13 @@ class ChatListViewModel(
             }
 
             else -> Unit
+        }
+    }
+
+    private fun loadLocalChatParticipant() {
+        viewModelScope.launch {
+            chatParticipantRepository
+                .fetchLocalParticipant()
         }
     }
 
