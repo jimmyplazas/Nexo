@@ -3,22 +3,36 @@ package dev.alejo.chat.presentation.chat_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.alejo.chat.domain.chat.ChatRepository
+import dev.alejo.chat.domain.notification.DeviceTokenService
 import dev.alejo.chat.presentation.mappers.toUi
+import dev.alejo.core.domain.auth.AuthService
 import dev.alejo.core.domain.auth.SessionStorage
+import dev.alejo.core.domain.onFailure
+import dev.alejo.core.domain.onSuccess
+import dev.alejo.core.presentation.util.toUiText
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ChatListViewModel(
     private val repository: ChatRepository,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
+    private val deviceTokenService: DeviceTokenService,
+    private val authService: AuthService
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
+
+    private val _event = Channel<ChatListEvent>()
+    val events = _event.receiveAsFlow()
 
     private val _state = MutableStateFlow(ChatListState())
     val state = combine(
@@ -65,8 +79,19 @@ class ChatListViewModel(
                 }
             }
 
+            ChatListAction.OnLogoutClick -> showLogoutConfirmation()
+
+            ChatListAction.OnDismissLogoutDialog -> {
+                _state.update {
+                    it.copy(
+                        isUserMenuOpen = true,
+                        showLogoutConfirmation = false
+                    )
+                }
+            }
+            ChatListAction.OnConfirmLogout -> logout()
+
             ChatListAction.OnProfileSettingsCLick,
-            ChatListAction.OnLogoutClick,
             ChatListAction.OnDismissUserMenu -> {
                 _state.update {
                     it.copy(
@@ -76,6 +101,50 @@ class ChatListViewModel(
             }
 
             else -> Unit
+        }
+    }
+
+    private fun logout() {
+        _state.update {
+            it.copy(
+                showLogoutConfirmation = false,
+                isUserMenuOpen = false
+            )
+        }
+
+        viewModelScope.launch {
+            // Add slight artificial delay to give UI time to hide the logout confirmation dialog
+            // before the navigation transition is done in the UI
+            delay(200)
+
+            val authInfo = sessionStorage.observeAuthInf().first()
+            val refreshToken = authInfo?.refreshToken ?: return@launch
+
+            deviceTokenService
+                .unregisterToken(refreshToken)
+                .onSuccess {
+                    authService
+                        .logout(refreshToken)
+                        .onSuccess {
+                            sessionStorage.set(null)
+                            repository.deleteAllChats()
+                            _event.send(ChatListEvent.OnLogoutSuccess)
+                        }
+                        .onFailure { error ->
+                            _event.send(ChatListEvent.OnLogoutError(error.toUiText()))
+                        }
+                }
+                .onFailure { error ->
+                    _event.send(ChatListEvent.OnLogoutError(error.toUiText()))
+                }
+        }
+    }
+
+    private fun showLogoutConfirmation() {
+        _state.update {
+            it.copy(
+                showLogoutConfirmation = true
+            )
         }
     }
 
