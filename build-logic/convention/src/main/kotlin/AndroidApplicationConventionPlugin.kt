@@ -1,7 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
 import dev.alejo.nexo.convention.configureKotlinAndroid
 import dev.alejo.nexo.convention.libs
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
