@@ -79,7 +79,7 @@ androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", ve
 jetbrains-compose-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel", version.ref = "koin" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "core-splashscreen" }
-
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle"}
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 
 # Kotlinx

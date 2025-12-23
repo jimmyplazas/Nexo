@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import dev.alejo.auth.presentation.navigation.AuthGraphRoutes
-import dev.alejo.chat.presentation.chat_list.ChatListRoute
+import dev.alejo.chat.presentation.navigation.ChatGraphRoutes
 import dev.alejo.core.designsystem.theme.NexoTheme
 import dev.alejo.core.presentation.util.ObserveAsEvents
 import dev.alejo.nexo.navigation.DeepLinkListener
@@ -21,7 +21,6 @@ fun App(
     viewModel: MainViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
-    DeepLinkListener(navController)
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -48,11 +47,13 @@ fun App(
             NavigationRoot(
                 navController = navController,
                 startDestination = if (state.isLoggedIn) {
-                    ChatListRoute
+                    ChatGraphRoutes.Graph
                 } else {
                     AuthGraphRoutes.Graph
                 }
             )
+
+            DeepLinkListener(navController)
         }
     }
 }
