@@ -123,10 +123,6 @@ class ChatListViewModel(
         }
 
         viewModelScope.launch {
-            // Add slight artificial delay to give UI time to hide the logout confirmation dialog
-            // before the navigation transition is done in the UI
-            delay(200)
-
             val authInfo = sessionStorage.observeAuthInf().first()
             val refreshToken = authInfo?.refreshToken ?: return@launch
 
