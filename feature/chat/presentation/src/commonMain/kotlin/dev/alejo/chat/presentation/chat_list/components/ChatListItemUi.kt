@@ -69,7 +69,9 @@ fun ChatListItemUi(
                             fontWeight = FontWeight.Bold
                         )
                     ) {
-                        append(chat.lastMessageSenderUsername + ": ")
+                        if (chat.lastMessageSenderUsername != null) {
+                            append(chat.lastMessageSenderUsername + ": ")
+                        }
                     }
                     append(lastMessage.content)
                 }
