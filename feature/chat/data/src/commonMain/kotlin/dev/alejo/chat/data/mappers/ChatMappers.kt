@@ -15,22 +15,30 @@ typealias DataMessageWithSender = MessageWithSender
 typealias DomainMessageWithSender = dev.alejo.chat.domain.models.MessageWithSender
 
 fun ChatDto.toDomain(): Chat {
+    val lastMessageSenderUsername = lastMessage?.let { message ->
+        participants.find { it.userId == message.senderId }?.username
+    }
     return Chat(
         id = id,
         participants = participants.map { it.toDomain() },
         lastActivityAt = Instant.parse(lastActivityAt),
-        lastMessage = lastMessage?.toDomain()
+        lastMessage = lastMessage?.toDomain(),
+        lastMessageSenderUsername = lastMessageSenderUsername
     )
 }
 fun ChatEntity.toDomain(
     participants: List<ChatParticipant>,
     lastMessage: dev.alejo.chat.domain.models.ChatMessage? = null
 ): Chat {
+    val lastMessageSenderUsername = lastMessage?.let { message ->
+        participants.find { it.userId == message.senderId }?.username
+    }
     return Chat(
         id = chatId,
         participants = participants,
         lastActivityAt = Instant.fromEpochMilliseconds(lastActivityAt),
-        lastMessage = lastMessage
+        lastMessage = lastMessage,
+        lastMessageSenderUsername = lastMessageSenderUsername
     )
 }
 
@@ -39,7 +47,8 @@ fun ChatWithParticipants.toDomain(): Chat {
         id = chat.chatId,
         participants = participants.map { it.toDomain() },
         lastActivityAt = Instant.fromEpochMilliseconds(chat.lastActivityAt),
-        lastMessage = lastMessage?.toDomain()
+        lastMessage = lastMessage?.toDomain(),
+        lastMessageSenderUsername = lastMessage?.senderUsername
     )
 }
 
