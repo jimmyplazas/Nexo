@@ -82,14 +82,19 @@ fun ChatDetailRoot(
     viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarState = remember { SnackbarHostState() }
+    val messageListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
 
-    val snackbarState = remember { SnackbarHostState() }
-    val messageListState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
+    LaunchedEffect(chatId, state.messages) {
+        if (state.messages.isNotEmpty()) {
+            messageListState.animateScrollToItem(0)
+        }
+    }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
